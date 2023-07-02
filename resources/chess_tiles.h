@@ -26,6 +26,6 @@
 /* Bank of tiles. */
 #define chess_tilesBank 0
 /* Start of tile array. */
-extern unsigned char chess_tiles[];
+extern const unsigned char chess_tiles[];
 
 /* End of CHESS_TILES.H */
