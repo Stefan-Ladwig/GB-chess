@@ -3,13 +3,14 @@
 #include <gb/hardware.h>
 #include "../resources/chess_tilemap.h"
 #include "../resources/chess_tiles.h"
+#include "chessboard.h"
 
 
 int main(void)
 {
     disable_interrupts();
     DISPLAY_OFF;
-    
+
     set_bkg_data(0, 99, chess_tiles);
     set_bkg_tiles(0, 0, 20, 18, chess_tilemap);
     SHOW_BKG;
