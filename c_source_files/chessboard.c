@@ -53,17 +53,19 @@ void add_possible_destination(uint8_t ***possible_destinations, uint8_t new_row,
 {
     *num_solutions = (*num_solutions) + 1;
     *possible_destinations = (uint8_t**) realloc(*possible_destinations, 
-                                                (*num_solutions) * sizeof(uint8_t*));
+                                                ((*num_solutions) + 1) * sizeof(uint8_t*));
     uint8_t *new_destination = malloc(2*sizeof(uint8_t));
     new_destination[0] = new_row;
     new_destination[1] = new_col;
     (*possible_destinations)[(*num_solutions) - 1] = new_destination;
+    (*possible_destinations)[(*num_solutions)] = (uint8_t*) NULL;
 }
 
 
 uint8_t **get_possible_destinations(const uint8_t origin[2])
 {
-    uint8_t **possible_destinations = (uint8_t**) malloc(0);
+    uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
+    *possible_destinations = (uint8_t*) NULL;
     uint8_t num_solutions = 0;
     uint8_t row  = origin[0];
     uint8_t col = origin[1];
@@ -111,23 +113,25 @@ uint8_t **get_possible_destinations(const uint8_t origin[2])
             }
         }
         break;
+
     case Knight:
         
         break;
+
     case Bishop:
         
         break;
+
     case Rook:
         
         break;
+
     case Queen:
         
         break;
+        
     case King:
         
-        break;
-    
-    default:
         break;
     }
     return possible_destinations;
