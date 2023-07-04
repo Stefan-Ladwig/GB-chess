@@ -214,10 +214,12 @@ bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, ui
         if ((*possible_destinations)[0] == destination_x &&
             (*possible_destinations)[1] == destination_y)
         {
+            free(possible_destinations);
             return true;
         }
 
         possible_destinations++;            
     }
+    free(possible_destinations);
     return false;
 }
