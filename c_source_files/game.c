@@ -36,10 +36,8 @@ void init_game()
 }
 
 
-int8_t *get_direction(uint8_t joypad_state)
+void get_direction(uint8_t joypad_state, int8_t direction[2])
 {
-    int8_t *direction = malloc(2 * sizeof(int8_t));
-
     switch (joypad_state)
     {
     case J_LEFT:
@@ -55,32 +53,28 @@ int8_t *get_direction(uint8_t joypad_state)
         break;
 
     case J_DOWN:
-        direction[1] = 1;
+       direction[1] = 1;
         break;
     }
-    return direction;
 }
 
 
 void move_cursor(uint8_t joypad_state)
 {    
-    int8_t *dir = get_direction(joypad_state);
-
+    int8_t dir[2] = {0};
+    get_direction(joypad_state, dir);
     cursor.x = (cursor.x + dir[0] + 8) % 8;
     cursor.y = (cursor.y + dir[1] + 8) % 8;
-
-    free(dir);
 }
 
 
 void move_selection(uint8_t joypad_state)
 {    
-    int8_t *dir = get_direction(joypad_state);
+    int8_t dir[2] = {0};
+    get_direction(joypad_state, dir);
 
     selection.x = (selection.x + dir[0] + 8) % 8;
     selection.y = (selection.y + dir[1] + 8) % 8;
-
-    free(dir);
 }
 
 
@@ -113,6 +107,8 @@ void handle_input()
             }
             else if (square_selected && move_is_legal(cursor.y, cursor.x, selection.y, selection.x))
             {
+                move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(cursor.y, cursor.x));
+                move_piece_board(cursor.y, cursor.x, selection.y, selection.x);
                 move_cursor_sprites(selection.x, selection.y);
                 cursor.x = selection.x;
                 cursor.y = selection.y;
