@@ -29,6 +29,13 @@ void init_cursor()
 }
 
 
+void init_game()
+{
+    init_cursor();
+    init_graphics();
+}
+
+
 int8_t *get_direction(uint8_t joypad_state)
 {
     int8_t *direction = malloc(2 * sizeof(int8_t));
