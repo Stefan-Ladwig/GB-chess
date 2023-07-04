@@ -179,7 +179,7 @@ uint8_t **get_possible_destinations(const uint8_t origin_x, const uint8_t origin
         ;
         const int8_t rook_moves[4][2] = { {1, 0}, {0, 1}, {-1, 0}, {0, -1} };
 
-        get_destinations_from_move_set(row, col, &num_solutions, 4, bishop_moves, true, &possible_destinations);
+        get_destinations_from_move_set(row, col, &num_solutions, 4, rook_moves, true, &possible_destinations);
     
         break;
 
@@ -188,7 +188,7 @@ uint8_t **get_possible_destinations(const uint8_t origin_x, const uint8_t origin
         const int8_t queen_moves[8][2] = { {1, 0}, {0, 1}, {-1, 0}, {0, -1},
                                            {1, 1}, {1, -1}, {-1, 1}, {-1, -1} };
 
-        get_destinations_from_move_set(row, col, &num_solutions, 8, bishop_moves, true, &possible_destinations);
+        get_destinations_from_move_set(row, col, &num_solutions, 8, queen_moves, true, &possible_destinations);
     
         break;
         
@@ -197,7 +197,7 @@ uint8_t **get_possible_destinations(const uint8_t origin_x, const uint8_t origin
         const int8_t king_moves[8][2] = { {1, 0}, {0, 1}, {-1, 0}, {0, -1},
                                            {1, 1}, {1, -1}, {-1, 1}, {-1, -1} };
 
-        get_destinations_from_move_set(row, col, &num_solutions, 8, bishop_moves, false, &possible_destinations);
+        get_destinations_from_move_set(row, col, &num_solutions, 8, king_moves, false, &possible_destinations);
     
         break;
     }
