@@ -7,7 +7,8 @@ uint8_t get_piece(uint8_t x, uint8_t y);
 
 bool piece_on_square(uint8_t x, uint8_t y);
 
-void move_piece(const uint8_t origin[2], const uint8_t destination[2]);
+void move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
+                      const uint8_t destination_x, const uint8_t destination_y);
 
 uint8_t **get_possible_destinations(const uint8_t origin[2]);
 

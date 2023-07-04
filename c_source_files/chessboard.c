@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-enum colored_chesspiece{w_King, w_Queen, w_Bishop, w_Knight, w_Rook, w_Pawn, 
+enum colored_chesspiece{w_King = 1, w_Queen, w_Bishop, w_Knight, w_Rook, w_Pawn, 
                         b_King, b_Queen, b_Bishop, b_Knight, b_Rook, b_Pawn};
 
 enum chesspiece{no_Piece, King, Queen, Bishop, Knight, Rook, Pawn};
@@ -36,7 +36,7 @@ bool piece_on_square(uint8_t x, uint8_t y)
 
 bool get_color(uint8_t colored_piece)
 {
-    return (colored_piece > 5);
+    return (colored_piece > 6);
 }
 
 
@@ -52,8 +52,8 @@ bool pawn_didnt_move(uint8_t row, bool color)
 }
 
 
-void move_piece(const uint8_t origin_x, const uint8_t origin_y,
-                const uint8_t destination_x, const uint8_t destination_y)
+void move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
+                      const uint8_t destination_x, const uint8_t destination_y)
 {
     chessboard[destination_x][destination_y] = chessboard[origin_x][origin_y];
     chessboard[origin_x][origin_y] = no_Piece;
@@ -117,7 +117,7 @@ uint8_t **get_possible_destinations(const uint8_t origin_x, const uint8_t origin
     uint8_t new_col = col;
     uint8_t moving_piece = chessboard[row][col];
     const bool color = get_color(moving_piece);
-    moving_piece = moving_piece + 1 - 6 * color;
+    moving_piece = moving_piece - 6 * color;
 
     switch (moving_piece)
     {
