@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 enum colored_chesspiece{w_King, w_Queen, w_Bishop, w_Knight, w_Rook, w_Pawn, 
                         b_King, b_Queen, b_Bishop, b_Knight, b_Rook, b_Pawn};
