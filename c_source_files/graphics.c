@@ -1,6 +1,7 @@
 #include <gb/gb.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "../resources/chess_tilemap.h"
 #include "../resources/chess_tiles.h"
 #include "../resources/chess_sprite_tiles.h"
@@ -88,4 +89,25 @@ void move_selection_sprites(uint8_t x, uint8_t y)
     move_sprite(5, 32 + x * 16, 24 + y * 16);
     move_sprite(6, 24 + x * 16, 16 + y * 16);
     move_sprite(7, 16 + x * 16, 16 + y * 16);
+}
+
+
+void move_piece_screen(uint8_t origin_x, uint8_t origin_y, 
+                uint8_t destination_x, uint8_t destination_y, uint8_t piece)
+{
+    bool origin_color = (origin_x + origin_y) % 2;
+    bool destination_color = (destination_x + destination_y) % 2;
+    bool piece_color = (piece > 6);
+    piece -= 6 * piece_color;
+
+    set_bkg_tile_xy(origin_x * 2 + 1, origin_y * 2 + 1, 97 + origin_color);
+    set_bkg_tile_xy(origin_x * 2 + 2, origin_y * 2 + 1, 97 + origin_color);
+    set_bkg_tile_xy(origin_x * 2 + 1, origin_y * 2 + 2, 97 + origin_color);
+    set_bkg_tile_xy(origin_x * 2 + 2, origin_y * 2 + 2, 97 + origin_color);    
+
+    uint8_t destination_tile_nr = 48 * destination_color + 24 * (1 - piece_color) + 2 * (piece - 1); 
+    set_bkg_tile_xy(destination_x * 2 + 1, destination_y * 2 + 1, destination_tile_nr);
+    set_bkg_tile_xy(destination_x * 2 + 2, destination_y * 2 + 1, destination_tile_nr + 1);
+    set_bkg_tile_xy(destination_x * 2 + 1, destination_y * 2 + 2, destination_tile_nr + 12);
+    set_bkg_tile_xy(destination_x * 2 + 2, destination_y * 2 + 2, destination_tile_nr + 13);
 }
