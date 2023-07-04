@@ -22,6 +22,6 @@
 #define chess_tilemapHeight 18
 #define chess_tilemapBank 0
 
-extern const unsigned char chess_tilemap[];
+extern unsigned char chess_tilemap[];
 
 /* End of CHESS_TILEMAP.H */
