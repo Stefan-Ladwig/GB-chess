@@ -11,6 +11,8 @@ uint8_t joypad_state = 0;
 
 bool square_selected = false;
 
+bool player = 0;
+
 struct pos {
     uint8_t x;
     uint8_t y;
@@ -78,49 +80,62 @@ void move_selection(uint8_t joypad_state)
 }
 
 
+void handle_dpad(uint8_t joypad_state)
+{
+    if (square_selected)
+    {
+        move_selection(joypad_state);
+        move_selection_sprites(selection.x, selection.y);
+    }
+    else
+    {
+        move_cursor(joypad_state);
+        move_cursor_sprites(cursor.x, cursor.y);
+    }
+}
+
+
+void handle_button_a(uint8_t joypad_state)
+{
+    if (!square_selected && piece_on_square(cursor.y, cursor.x) &&
+        player == get_color(get_piece(cursor.y, cursor.x)))
+    {
+        move_selection_sprites(cursor.x, cursor.y);
+        selection.x = cursor.x;
+        selection.y = cursor.y;
+        square_selected = true;
+    }
+    else if (square_selected && move_is_legal(cursor.y, cursor.x, selection.y, selection.x))
+    {
+        move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(cursor.y, cursor.x));
+        move_piece_board(cursor.y, cursor.x, selection.y, selection.x);
+        move_cursor_sprites(selection.x, selection.y);
+        cursor.x = selection.x;
+        cursor.y = selection.y;
+        square_selected = false;
+        hide_selection();
+        player = !player;
+    }
+    else
+    {
+        square_selected = false;
+        hide_selection();
+    }
+}
+
 void handle_input()
 {
-        wait_vbl_done();
-        joypad_state = joypad();
+    wait_vbl_done();
+    joypad_state = joypad();
 
-        if (joypad_state & DPAD_PRESSED)
-        {
-            if (square_selected)
-            {
-                move_selection(joypad_state);
-                move_selection_sprites(selection.x, selection.y);
-            }
-            else
-            {
-                move_cursor(joypad_state);
-                move_cursor_sprites(cursor.x, cursor.y);
-            }
-        }
-        else if (joypad_state & J_A)
-        {
-            if (!square_selected && piece_on_square(cursor.y, cursor.x))
-            {
-                move_selection_sprites(cursor.x, cursor.y);
-                selection.x = cursor.x;
-                selection.y = cursor.y;
-                square_selected = true;
-            }
-            else if (square_selected && move_is_legal(cursor.y, cursor.x, selection.y, selection.x))
-            {
-                move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(cursor.y, cursor.x));
-                move_piece_board(cursor.y, cursor.x, selection.y, selection.x);
-                move_cursor_sprites(selection.x, selection.y);
-                cursor.x = selection.x;
-                cursor.y = selection.y;
-                square_selected = false;
-                hide_selection();
-            }
-            else
-            {
-                square_selected = false;
-                hide_selection();
-            }
-        }
+    if (joypad_state & DPAD_PRESSED)
+    {
+        handle_dpad(joypad_state);
+    }
+    else if (joypad_state & J_A)
+    {
+        handle_button_a(joypad_state);
+    }
 
-        waitpadup();
+    waitpadup();
 }
