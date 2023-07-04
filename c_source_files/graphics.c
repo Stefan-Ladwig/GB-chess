@@ -25,6 +25,11 @@ void init_sprites()
         set_sprite_tile(i, i / 2);
     }
 
+    for (uint8_t j = 0; j < 8; j++)
+    {
+        set_sprite_tile(j + 8, j / 2);
+    }
+
     SHOW_SPRITES;
 }
 
@@ -42,10 +47,41 @@ void init_graphics()
 }
 
 
+void hide_cursor()
+{
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        move_sprite(i + 8, 0, 0);
+    }
+}
+
+
+void hide_selection()
+{
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        move_sprite(i, 0, 0);
+    }
+}
+
+
+void move_cursor_sprites(uint8_t x, uint8_t y)
+{    
+    move_sprite( 8,  8 + x * 16, 24 + y * 16);
+    move_sprite( 9,  8 + x * 16, 32 + y * 16);
+    move_sprite(10, 16 + x * 16, 40 + y * 16);
+    move_sprite(11, 24 + x * 16, 40 + y * 16);
+    move_sprite(12, 32 + x * 16, 32 + y * 16);
+    move_sprite(13, 32 + x * 16, 24 + y * 16);
+    move_sprite(14, 24 + x * 16, 16 + y * 16);
+    move_sprite(15, 16 + x * 16, 16 + y * 16);
+}
+
+
 void move_selection_sprites(uint8_t x, uint8_t y)
 {    
-    move_sprite(0, 8 + x * 16, 24 + y * 16);
-    move_sprite(1, 8 + x * 16, 32 + y * 16);
+    move_sprite(0,  8 + x * 16, 24 + y * 16);
+    move_sprite(1,  8 + x * 16, 32 + y * 16);
     move_sprite(2, 16 + x * 16, 40 + y * 16);
     move_sprite(3, 24 + x * 16, 40 + y * 16);
     move_sprite(4, 32 + x * 16, 32 + y * 16);
