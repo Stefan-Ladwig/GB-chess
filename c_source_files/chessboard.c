@@ -22,6 +22,12 @@ uint8_t chessboard[8][8] =
 };
 
 
+uint8_t get_piece(uint8_t x, uint8_t y)
+{
+    return chessboard[x][y];
+}
+
+
 bool piece_on_square(uint8_t x, uint8_t y)
 {
     return chessboard[x][y] != no_Piece;
@@ -42,7 +48,7 @@ bool index_out_of_range(uint8_t index)
 
 bool pawn_didnt_move(uint8_t row, bool color)
 {
-    return ((color == white && row == 1) || (color == black && row == 6));
+    return ((color == white && row == 6) || (color == black && row == 1));
 }
 
 
@@ -119,7 +125,7 @@ uint8_t **get_possible_destinations(const uint8_t origin_x, const uint8_t origin
 
         for(uint8_t i = 0; i < 2; i++)
         {
-            new_row = row + 1 - 2 * color;
+            new_row = row - 1 + 2 * color;
             if (index_out_of_range(new_row))
                 break;
 
@@ -134,7 +140,7 @@ uint8_t **get_possible_destinations(const uint8_t origin_x, const uint8_t origin
                 break;
         }
 
-        new_row = row + 1 - 2 * color;
+        new_row = row - 1 + 2 * color;
         if (index_out_of_range(new_row))
             break;
 
@@ -199,7 +205,19 @@ uint8_t **get_possible_destinations(const uint8_t origin_x, const uint8_t origin
 }
 
 
-bool move_is_legal(uint8_t x_origin, uint8_t y_origin, uint8_t x_destiantion, uint8_t y_destination)
+bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, uint8_t destination_y)
 {
-    uint8_t **possible_destinations = get_possible_destinations()
+    uint8_t **possible_destinations = get_possible_destinations(origin_x, origin_y);
+
+    while (*possible_destinations != NULL)
+    {
+        if ((*possible_destinations)[0] == destination_x &&
+            (*possible_destinations)[1] == destination_y)
+        {
+            return true;
+        }
+
+        possible_destinations++;            
+    }
+    return false;
 }
