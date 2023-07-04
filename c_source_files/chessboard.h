@@ -10,8 +10,6 @@ bool piece_on_square(uint8_t x, uint8_t y);
 void move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
                       const uint8_t destination_x, const uint8_t destination_y);
 
-uint8_t **get_possible_destinations(const uint8_t origin[2]);
-
 bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, uint8_t destination_y);
 
 #endif
