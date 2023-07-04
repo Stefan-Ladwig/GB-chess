@@ -11,15 +11,21 @@ enum color{white, black};
 
 uint8_t chessboard[8][8] =
 {
-    {w_Rook,   w_Knight, w_Bishop, w_Queen,  w_King,   w_Bishop, w_Knight, w_Rook},
-    {w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn},
-    {no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece},
-    {no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece},
-    {no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece},
-    {no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece},
+    {b_Rook,   b_Knight, b_Bishop, b_Queen,  b_King,   b_Bishop, b_Knight, b_Rook},
     {b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn},
-    {b_Rook,   b_Knight, b_Bishop, b_Queen,  b_King,   b_Bishop, b_Knight, b_Rook}
+    {no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece},
+    {no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece},
+    {no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece},
+    {no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece, no_Piece},
+    {w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn,   w_Pawn},
+    {w_Rook,   w_Knight, w_Bishop, w_Queen,  w_King,   w_Bishop, w_Knight, w_Rook}
 };
+
+
+bool piece_on_square(uint8_t x, uint8_t y)
+{
+    return chessboard[x][y] != no_Piece;
+}
 
 
 bool get_color(uint8_t colored_piece)
@@ -40,16 +46,17 @@ bool pawn_didnt_move(uint8_t row, bool color)
 }
 
 
-void move_piece(const uint8_t origin[2], const uint8_t destination[2])
+void move_piece(const uint8_t origin_x, const uint8_t origin_y,
+                const uint8_t destination_x, const uint8_t destination_y)
 {
-    chessboard[destination[0]][destination[1]] = chessboard[origin[0]][origin[1]];
-    chessboard[origin[0]][origin[1]] = no_Piece;
+    chessboard[destination_x][destination_y] = chessboard[origin_x][origin_y];
+    chessboard[origin_x][origin_y] = no_Piece;
 }
 
 
 bool is_possible_destination(uint8_t row, uint8_t col, uint8_t new_row, uint8_t new_col)
 {
-    return (chessboard[new_row][new_col] == no_Piece ||
+    return (!piece_on_square(new_row, new_col) ||
             get_color(chessboard[new_row][new_col]) != get_color(chessboard[row][col]));
 }
 
@@ -93,13 +100,13 @@ void get_destinations_from_move_set(uint8_t row, uint8_t col, uint8_t *num_solut
 }
 
 
-uint8_t **get_possible_destinations(const uint8_t origin[2])
+uint8_t **get_possible_destinations(const uint8_t origin_x, const uint8_t origin_y)
 {
     uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
     *possible_destinations = (uint8_t*) NULL;
     uint8_t num_solutions = 0;
-    uint8_t row  = origin[0];
-    uint8_t col = origin[1];
+    uint8_t row  = origin_x;
+    uint8_t col = origin_y;
     uint8_t new_row = row;
     uint8_t new_col = col;
     uint8_t moving_piece = chessboard[row][col];
@@ -189,4 +196,10 @@ uint8_t **get_possible_destinations(const uint8_t origin[2])
         break;
     }
     return possible_destinations;
+}
+
+
+bool move_is_legal(uint8_t x_origin, uint8_t y_origin, uint8_t x_destiantion, uint8_t y_destination)
+{
+    uint8_t **possible_destinations = get_possible_destinations()
 }
