@@ -107,8 +107,8 @@ void handle_button_a(uint8_t joypad_state)
     }
     else if (square_selected && move_is_legal(cursor.y, cursor.x, selection.y, selection.x))
     {
-        move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(cursor.y, cursor.x));
         move_piece_board(cursor.y, cursor.x, selection.y, selection.x);
+        move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(selection.y, selection.x));
         move_cursor_sprites(selection.x, selection.y);
         cursor.x = selection.x;
         cursor.y = selection.y;
