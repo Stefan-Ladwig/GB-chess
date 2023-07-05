@@ -9,6 +9,8 @@ enum chesspiece{no_Piece, King, Queen, Bishop, Knight, Rook, Pawn};
 
 enum color{white, black};
 
+enum event{no_Event, Promotion, En_passant, Checkmate, Stalemate};
+
 uint8_t chessboard[8][8] =
 {
     {b_Rook,   b_Knight, b_Bishop, b_Queen,  b_King,   b_Bishop, b_Knight, b_Rook},
@@ -54,12 +56,8 @@ bool pawn_moved(uint8_t row, bool color)
 }
 
 
-void move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
-                      const uint8_t destination_x, const uint8_t destination_y)
+void update_king_position(uint8_t destination_x, uint8_t destination_y)
 {
-    chessboard[destination_x][destination_y] = chessboard[origin_x][origin_y];
-    chessboard[origin_x][origin_y] = no_Piece;
-
     if (get_piece(destination_x, destination_y) == w_King)
     {
         king_positions[white][0] = destination_x;
@@ -70,6 +68,18 @@ void move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
         king_positions[black][0] = destination_x;
         king_positions[black][1] = destination_y;
     }
+}
+
+
+uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
+                      const uint8_t destination_x, const uint8_t destination_y)
+{
+    chessboard[destination_x][destination_y] = chessboard[origin_x][origin_y];
+    chessboard[origin_x][origin_y] = no_Piece;
+
+    update_king_position(destination_x, destination_y);
+
+    return no_Event;
 }
 
 
