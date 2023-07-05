@@ -276,7 +276,7 @@ bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, ui
     {
         uint8_t piece_on_destination = chessboard[destination_x][destination_y];
         move_piece_board(origin_x, origin_y, destination_x, destination_y);
-        friendly_king_attacked = king_under_attack(get_color(chessboard[destination_x][origin_y]));
+        friendly_king_attacked = king_under_attack(get_color(chessboard[destination_x][destination_y]));
         move_piece_board(destination_x, destination_y, origin_x, origin_y);
         chessboard[destination_x][destination_y] = piece_on_destination;
     }
