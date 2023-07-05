@@ -173,7 +173,7 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
         {
             new_row = row + (2 * color - 1) * (i + 1);
             if (index_out_of_range(new_row))
-                break;
+                continue;
 
             if (chessboard[new_row][new_col] == no_Piece)
                 add_possible_destination(possible_destinations, new_row, new_col, num_solutions);
@@ -190,7 +190,7 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
         {
             new_col = col + 1 - 2 * i;
             if (index_out_of_range(new_col))
-                break;
+                continue;
 
             if (chessboard[new_row][new_col] != no_Piece &&
                 get_color(chessboard[new_row][new_col]) != color)
