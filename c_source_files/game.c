@@ -113,6 +113,10 @@ void handle_button_a(uint8_t joypad_state)
         switch (event)
         {
         case Promotion:
+            move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(selection.y, selection.x));
+            move_cursor_sprites(selection.x, selection.y);
+            set_piece(selection.y, selection.x, Queen + 6 * get_color(get_piece(selection.y, selection.x)));
+            draw_piece(selection.x, selection.y, Queen + 6 * get_color(get_piece(selection.y, selection.x)));
             break;
         case En_passant:
             break;
@@ -120,10 +124,10 @@ void handle_button_a(uint8_t joypad_state)
             break;
         case Stalemate:
             break;
-        
+        default:
+            move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(selection.y, selection.x));
+            move_cursor_sprites(selection.x, selection.y);
         }
-        move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(selection.y, selection.x));
-        move_cursor_sprites(selection.x, selection.y);
         cursor.x = selection.x;
         cursor.y = selection.y;
         square_selected = false;
