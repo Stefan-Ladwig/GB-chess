@@ -92,22 +92,34 @@ void move_selection_sprites(uint8_t x, uint8_t y)
 }
 
 
+void draw_blank_square(uint8_t x, uint8_t y)
+{
+    bool square_color = (x + y) % 2;
+
+    set_bkg_tile_xy(x * 2 + 1, y * 2 + 1, 97 + square_color);
+    set_bkg_tile_xy(x * 2 + 2, y * 2 + 1, 97 + square_color);
+    set_bkg_tile_xy(x * 2 + 1, y * 2 + 2, 97 + square_color);
+    set_bkg_tile_xy(x * 2 + 2, y * 2 + 2, 97 + square_color); 
+}
+
+
+void draw_piece(uint8_t x, uint8_t y, uint8_t piece)
+{
+    bool square_color = (x + y) % 2;
+    bool piece_color = (piece > 6);
+    piece -= 6 * piece_color;
+    uint8_t tile_nr = 48 * square_color + 24 * (1 - piece_color) + 2 * (piece - 1);
+
+    set_bkg_tile_xy(x * 2 + 1, y * 2 + 1, tile_nr);
+    set_bkg_tile_xy(x * 2 + 2, y * 2 + 1, tile_nr + 1);
+    set_bkg_tile_xy(x * 2 + 1, y * 2 + 2, tile_nr + 12);
+    set_bkg_tile_xy(x * 2 + 2, y * 2 + 2, tile_nr + 13);
+}
+
+
 void move_piece_screen(uint8_t origin_x, uint8_t origin_y, 
                 uint8_t destination_x, uint8_t destination_y, uint8_t piece)
 {
-    bool origin_color = (origin_x + origin_y) % 2;
-    bool destination_color = (destination_x + destination_y) % 2;
-    bool piece_color = (piece > 6);
-    piece -= 6 * piece_color;
-
-    set_bkg_tile_xy(origin_x * 2 + 1, origin_y * 2 + 1, 97 + origin_color);
-    set_bkg_tile_xy(origin_x * 2 + 2, origin_y * 2 + 1, 97 + origin_color);
-    set_bkg_tile_xy(origin_x * 2 + 1, origin_y * 2 + 2, 97 + origin_color);
-    set_bkg_tile_xy(origin_x * 2 + 2, origin_y * 2 + 2, 97 + origin_color);    
-
-    uint8_t destination_tile_nr = 48 * destination_color + 24 * (1 - piece_color) + 2 * (piece - 1); 
-    set_bkg_tile_xy(destination_x * 2 + 1, destination_y * 2 + 1, destination_tile_nr);
-    set_bkg_tile_xy(destination_x * 2 + 2, destination_y * 2 + 1, destination_tile_nr + 1);
-    set_bkg_tile_xy(destination_x * 2 + 1, destination_y * 2 + 2, destination_tile_nr + 12);
-    set_bkg_tile_xy(destination_x * 2 + 2, destination_y * 2 + 2, destination_tile_nr + 13);
+    draw_blank_square(origin_x, origin_y);
+    draw_piece(destination_x, destination_y, piece);
 }
