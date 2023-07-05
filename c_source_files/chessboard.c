@@ -32,6 +32,12 @@ uint8_t get_piece(uint8_t x, uint8_t y)
 }
 
 
+void set_piece(uint8_t x, uint8_t y, uint8_t piece)
+{
+    chessboard[x][y] = piece;
+}
+
+
 bool piece_on_square(uint8_t x, uint8_t y)
 {
     return chessboard[x][y] != no_Piece;
@@ -53,6 +59,16 @@ bool index_out_of_range(uint8_t index)
 bool pawn_moved(uint8_t row, bool color)
 {
     return !((color == white && row == 6) || (color == black && row == 1));
+}
+
+
+bool pawn_promotes(uint8_t row, uint8_t col)
+{
+    uint8_t piece = get_piece(row, col);
+    piece -= 6 * get_color(piece);
+    if ( (piece == Pawn) && (row == 0 || row == 7) )
+        return true;
+    return false;
 }
 
 
@@ -78,6 +94,8 @@ uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
     chessboard[origin_x][origin_y] = no_Piece;
 
     update_king_position(destination_x, destination_y);
+
+    if (pawn_promotes(destination_x, destination_y)) return Promotion;
 
     return no_Event;
 }

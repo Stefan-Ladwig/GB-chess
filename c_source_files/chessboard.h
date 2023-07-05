@@ -3,9 +3,16 @@
 
 #include <stdint.h>
 
+extern enum chesspiece{no_Piece, King, Queen, Bishop, Knight, Rook, Pawn};
+
+extern enum colored_chesspiece{w_King = 1, w_Queen, w_Bishop, w_Knight, w_Rook, w_Pawn, 
+                               b_King, b_Queen, b_Bishop, b_Knight, b_Rook, b_Pawn};
+
 extern enum event{no_Event, Promotion, En_passant, Checkmate, Stalemate};
 
 uint8_t get_piece(uint8_t x, uint8_t y);
+
+void set_piece(uint8_t x, uint8_t y, uint8_t piece);
 
 bool get_color(uint8_t colored_piece);
 
