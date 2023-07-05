@@ -48,9 +48,9 @@ bool index_out_of_range(uint8_t index)
 }
 
 
-bool pawn_didnt_move(uint8_t row, bool color)
+bool pawn_moved(uint8_t row, bool color)
 {
-    return ((color == white && row == 6) || (color == black && row == 1));
+    return !((color == white && row == 6) || (color == black && row == 1));
 }
 
 
@@ -143,16 +143,14 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
 
         for(uint8_t i = 0; i < 2; i++)
         {
-            new_row = row - 1 + 2 * color;
+            new_row = row + (2 * color - 1) * (i + 1);
             if (index_out_of_range(new_row))
                 break;
 
             if (chessboard[new_row][new_col] == no_Piece)
                 add_possible_destination(possible_destinations, new_row, new_col, num_solutions);
 
-            if (pawn_didnt_move(row, color))
-                row = new_row;
-            else
+            if (pawn_moved(row, color))
                 break;
         }
 
@@ -249,21 +247,23 @@ bool king_under_attack(bool color)
 
     for (uint8_t piece = Queen; piece <= Pawn; piece++)
     {
-        uint8_t **possible_destinations = get_possible_destinations(x, y,
-                                              (piece==Pawn ? piece + 6 * color : piece + 6 * (!color)));
+        uint8_t colored_piece = piece + 6 * color;
+        chessboard[x][y] = colored_piece;
+        uint8_t **possible_destinations = get_possible_destinations(x, y, colored_piece);
 
         while (*possible_destinations != NULL)
         {
-            if (get_piece((*possible_destinations)[0], (*possible_destinations)[1]) == 
-                piece + 6 * (!color))
+            if (get_piece((*possible_destinations)[0], (*possible_destinations)[1]) == piece + 6 * (!color))
             {
                 free_possible_destinations(possible_destinations);
+                chessboard[x][y] = King + 6 * color;
                 return true;
             }
             possible_destinations++;            
         }
         free_possible_destinations(possible_destinations);
     }
+    chessboard[x][y] = King + 6 * color;
     return false;
 }
 
