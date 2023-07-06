@@ -97,7 +97,7 @@ void handle_dpad(uint8_t joypad_state)
 }
 
 
-void handle_button_a(uint8_t joypad_state)
+void handle_button_a()
 {
     if (!square_selected && piece_on_square(cursor.y, cursor.x) &&
         player == get_color(get_piece(cursor.y, cursor.x)))
@@ -112,13 +112,20 @@ void handle_button_a(uint8_t joypad_state)
         event = move_piece_board(cursor.y, cursor.x, selection.y, selection.x);
         switch (event)
         {
-        case Promotion:
+        case Castles:
+            break;
+        case Promotion:;
             move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(selection.y, selection.x));
             move_cursor_sprites(selection.x, selection.y);
             set_piece(selection.y, selection.x, Queen + 6 * get_color(get_piece(selection.y, selection.x)));
             draw_piece(selection.x, selection.y, Queen + 6 * get_color(get_piece(selection.y, selection.x)));
             break;
-        case En_passant:
+        case En_passaint:;
+            uint8_t piece = get_piece(selection.y, selection.x);
+            set_piece(selection.y + 1 - 2 * get_color(piece), selection.x, no_Piece);
+            draw_blank_square(selection.x, selection.y + 1 - 2 * get_color(piece));
+            move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, piece);
+            move_cursor_sprites(selection.x, selection.y);
             break;
         case Checkmate:
             break;
@@ -152,7 +159,7 @@ void handle_input()
     }
     else if (joypad_state & J_A)
     {
-        handle_button_a(joypad_state);
+        handle_button_a();
     }
 
     waitpadup();

@@ -9,7 +9,7 @@ enum chesspiece{no_Piece, King, Queen, Bishop, Knight, Rook, Pawn};
 
 enum color{white, black};
 
-enum event{no_Event, Promotion, En_passant, Checkmate, Stalemate};
+enum event{no_Event, Castles, Promotion, En_passaint, Checkmate, Stalemate};
 
 uint8_t chessboard[8][8] =
 {
@@ -25,10 +25,24 @@ uint8_t chessboard[8][8] =
 
 uint8_t king_positions[2][2] = { {7, 4}, {0, 4} };
 
+uint8_t en_passaint_square[2] = { UINT8_MAX, UINT8_MAX };
+
 
 uint8_t get_piece(uint8_t x, uint8_t y)
 {
     return chessboard[x][y];
+}
+
+
+bool get_color(uint8_t colored_piece)
+{
+    return (colored_piece > 6);
+}
+
+
+uint8_t get_colorless_piece(uint8_t x, uint8_t y)
+{
+    return chessboard[x][y] - 6 * get_color(get_piece(x, y));
 }
 
 
@@ -43,13 +57,6 @@ bool piece_on_square(uint8_t x, uint8_t y)
     return chessboard[x][y] != no_Piece;
 }
 
-
-bool get_color(uint8_t colored_piece)
-{
-    return (colored_piece > 6);
-}
-
-
 bool index_out_of_range(uint8_t index)
 {
     return (index > 7); 
@@ -62,6 +69,13 @@ bool pawn_moved(uint8_t row, bool color)
 }
 
 
+bool pawn_jumped(const uint8_t origin_x,
+                 const uint8_t destination_x, const uint8_t destination_y)
+{
+    return (get_colorless_piece(destination_x, destination_y) == Pawn && abs(destination_x - origin_x) == 2);
+}
+
+
 bool pawn_promotes(uint8_t row, uint8_t col)
 {
     uint8_t piece = get_piece(row, col);
@@ -69,6 +83,16 @@ bool pawn_promotes(uint8_t row, uint8_t col)
     if ( (piece == Pawn) && (row == 0 || row == 7) )
         return true;
     return false;
+}
+
+
+bool en_passaint(const uint8_t origin_x, const uint8_t origin_y,
+                 const uint8_t destination_x, const uint8_t destination_y)
+{
+    uint8_t friendly_piece = get_colorless_piece(origin_x, origin_y);
+    uint8_t enemy_piece = get_colorless_piece(destination_x, destination_y);
+
+    return (friendly_piece == Pawn && enemy_piece == no_Piece && destination_y - origin_y != 0);
 }
 
 
@@ -88,12 +112,27 @@ void update_king_position(uint8_t destination_x, uint8_t destination_y)
 
 
 uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
-                      const uint8_t destination_x, const uint8_t destination_y)
+                         const uint8_t destination_x, const uint8_t destination_y)
 {
+    bool move_is_en_passant = en_passaint(origin_x, origin_y, destination_x, destination_y);
+
     chessboard[destination_x][destination_y] = chessboard[origin_x][origin_y];
     chessboard[origin_x][origin_y] = no_Piece;
 
     update_king_position(destination_x, destination_y);
+
+    if (pawn_jumped(origin_x, destination_x, destination_y))
+    {
+        en_passaint_square[0] = destination_x + 1 - 2 * get_color(get_piece(destination_x, destination_y));
+        en_passaint_square[1] = destination_y;
+    }
+    else
+    {
+        en_passaint_square[0] = UINT8_MAX;
+        en_passaint_square[1] = UINT8_MAX;
+    }
+
+    if (move_is_en_passant) return En_passaint;
 
     if (pawn_promotes(destination_x, destination_y)) return Promotion;
 
@@ -191,10 +230,13 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
             new_col = col + 1 - 2 * i;
             if (index_out_of_range(new_col))
                 continue;
-
-            if (chessboard[new_row][new_col] != no_Piece &&
-                get_color(chessboard[new_row][new_col]) != color)
+            uint8_t eps[2] = {0};
+            eps[0]=en_passaint_square[0];
+            eps[1]=en_passaint_square[1];
+            if ((get_piece(new_row, new_col) != no_Piece && get_color(get_piece(new_row, new_col)) != color)
+                || (new_row == en_passaint_square[0] && new_col == en_passaint_square[1]))
                 add_possible_destination(possible_destinations, new_row, new_col, num_solutions);
+
         }
         break;
 
@@ -258,7 +300,6 @@ bool move_is_possible(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x,
             (*possible_destinations)[1] == destination_y)
         {
             free_possible_destinations(possible_destinations);
-            free(possible_destinations);
             return true;
         }
         possible_destinations++;            
@@ -310,3 +351,11 @@ bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, ui
     }
     return move_possible && !friendly_king_attacked;
 }
+
+// void main()
+// {
+//     move_piece_board(6, 3, 3, 3);
+//     move_piece_board(1, 4, 3, 4);
+//     move_is_legal(3, 3, 2, 4);
+//     uint8_t event = move_piece_board(3, 3, 2, 4);
+// }
