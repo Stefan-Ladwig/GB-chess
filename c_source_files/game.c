@@ -110,31 +110,32 @@ void handle_button_a()
     else if (square_selected && move_is_legal(cursor.y, cursor.x, selection.y, selection.x))
     {
         event = move_piece_board(cursor.y, cursor.x, selection.y, selection.x);
+
+        uint8_t piece = get_piece(selection.y, selection.x);
+        move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, piece);
+        move_cursor_sprites(selection.x, selection.y);
+
         switch (event)
         {
         case Castles:
+            move_piece_screen(7 * (selection.x == 6), cursor.y, 
+                              (selection.x + cursor.x) / 2, selection.y,
+                              Rook + 6 * get_color(piece));
             break;
         case Promotion:;
-            move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(selection.y, selection.x));
-            move_cursor_sprites(selection.x, selection.y);
-            set_piece(selection.y, selection.x, Queen + 6 * get_color(get_piece(selection.y, selection.x)));
-            draw_piece(selection.x, selection.y, Queen + 6 * get_color(get_piece(selection.y, selection.x)));
+            set_piece(selection.y, selection.x, Queen + 6 * get_color(piece));
+            draw_piece(selection.x, selection.y, Queen + 6 * get_color(piece));
             break;
         case En_passaint:;
-            uint8_t piece = get_piece(selection.y, selection.x);
             set_piece(selection.y + 1 - 2 * get_color(piece), selection.x, no_Piece);
             draw_blank_square(selection.x, selection.y + 1 - 2 * get_color(piece));
-            move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, piece);
-            move_cursor_sprites(selection.x, selection.y);
             break;
         case Checkmate:
             break;
         case Stalemate:
             break;
-        default:
-            move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, get_piece(selection.y, selection.x));
-            move_cursor_sprites(selection.x, selection.y);
         }
+        
         cursor.x = selection.x;
         cursor.y = selection.y;
         square_selected = false;
