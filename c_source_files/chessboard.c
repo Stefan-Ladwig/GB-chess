@@ -447,8 +447,8 @@ bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, ui
     if (move_possible)
     {
         uint8_t piece_on_destination = get_piece(destination_x, destination_y);
-        uint8_t event = move_piece_board(origin_x, origin_y, destination_x, destination_y);
         uint8_t en_passaint_buffer[2] = { en_passaint_square[0], en_passaint_square[1] };
+        uint8_t event = move_piece_board(origin_x, origin_y, destination_x, destination_y);
 
         friendly_king_attacked = king_under_attack(get_color(get_piece(destination_x, destination_y)));
 
