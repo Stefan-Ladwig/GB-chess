@@ -340,31 +340,50 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
         
         if (castle_pieces_moved[color][1]) break;
 
+        uint8_t row_king = 7 * !color;
+
         for (uint8_t i = 0; i < 3; i+=2)
         {
             if (castle_pieces_moved[color][i]) continue;
 
-            for (uint8_t j = 1 + 2 * i; j < 3 + 2 * i + i / 2; j++)
+            bool squares_not_empty = false;
+            for (uint8_t j = 1 + 2 * i; j < 3 + 2 * i + 1 - i / 2; j++)
             {
-                if (piece_on_square(7 * !color, j)) continue;
+                if (piece_on_square(row_king, j))
+                {
+                    squares_not_empty = true;
+                    break;
+                }
             }
+
+            if (squares_not_empty) continue;
 
             if (king_under_attack(color)) continue;
             
             bool king_attacked = false;
             for (int8_t k = 0; k < 2; k++)
             {
-                set_piece(7 * !color, 4 + (k + 1) * (i - 1), King + 6 * color);
-                set_piece(7 * !color, 4 + k * (i - 1), no_Piece);
+                uint8_t new_col_king = 4 + (k + 1) * (i - 1);
+                set_piece(row_king, new_col_king, King + 6 * color);
+                set_piece(row_king, new_col_king - i + 1, no_Piece);
+                king_positions[color][1] = new_col_king;
 
-                king_attacked = king_under_attack(color);
+                if (king_under_attack(color))
+                {
+                    set_piece(row_king, new_col_king, no_Piece);
+                    set_piece(row_king, new_col_king - i + 1, King + 6 * color);
+                    king_positions[color][1] = new_col_king - i + 1;
+                    king_attacked = true;
+                    break;
+                }
             }
-            set_piece(7 * !color, 4 + 2 * (i - 1), no_Piece);
-            set_piece(7 * !color, 4, King + 6 * color);
-
             if (king_attacked) continue;
 
-            add_possible_destination(possible_destinations, 7 * !color, 2 + 2 * i, num_solutions);
+            set_piece(row_king, 4 + 2 * (i - 1), no_Piece);
+            set_piece(row_king, 4, King + 6 * color);
+            king_positions[color][1] = 4;
+
+            add_possible_destination(possible_destinations, row_king, 2 + 2 * i, num_solutions);
         }
 
         break;
