@@ -268,6 +268,9 @@ void get_destinations_from_move_set(uint8_t row, uint8_t col, uint8_t *num_solut
 }
 
 
+bool king_under_attack(bool color);
+
+
 void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
                                 uint8_t ***possible_destinations, uint8_t *num_solutions)
 {
@@ -345,6 +348,21 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
             {
                 if (piece_on_square(7 * !color, j)) continue;
             }
+
+            if (king_under_attack(color)) continue;
+            
+            bool king_attacked = false;
+            for (int8_t k = 0; k < 2; k++)
+            {
+                set_piece(7 * !color, 4 + (k + 1) * (i - 1), King + 6 * color);
+                set_piece(7 * !color, 4 + k * (i - 1), no_Piece);
+
+                king_attacked = king_under_attack(color);
+            }
+            set_piece(7 * !color, 4 + 2 * (i - 1), no_Piece);
+            set_piece(7 * !color, 4, King + 6 * color);
+
+            if (king_attacked) continue;
 
             add_possible_destination(possible_destinations, 7 * !color, 2 + 2 * i, num_solutions);
         }
