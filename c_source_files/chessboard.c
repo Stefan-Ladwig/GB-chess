@@ -324,23 +324,22 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
 }
 
 
-uint8_t **get_possible_destinations(const uint8_t origin_x, const uint8_t origin_y, uint8_t piece)
+void get_possible_destinations(const uint8_t origin_x, const uint8_t origin_y, uint8_t piece,
+                               uint8_t ***possible_destinations)
 {
-    uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
-    *possible_destinations = (uint8_t*) NULL;
     uint8_t num_solutions = 0;
 
     get_destinations_for_piece(piece, origin_x, origin_y,
-                               &possible_destinations, &num_solutions);
-
-    return possible_destinations;
+                               possible_destinations, &num_solutions);
 }
 
 
 bool move_is_possible(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, uint8_t destination_y)
 {
     uint8_t piece = chessboard[origin_x][origin_y];
-    uint8_t **possible_destinations = get_possible_destinations(origin_x, origin_y, piece);
+    uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
+    *possible_destinations = (uint8_t*) NULL;
+    get_possible_destinations(origin_x, origin_y, piece, &possible_destinations);
 
     while (*possible_destinations != NULL)
     {
@@ -348,11 +347,13 @@ bool move_is_possible(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x,
             (*possible_destinations)[1] == destination_y)
         {
             free_possible_destinations(possible_destinations);
+            free(possible_destinations);
             return true;
         }
         possible_destinations++;            
     }
     free_possible_destinations(possible_destinations);
+    free(possible_destinations);
     return false;
 }
 
@@ -366,19 +367,23 @@ bool king_under_attack(bool color)
     {
         uint8_t colored_piece = piece + 6 * color;
         chessboard[x][y] = colored_piece;
-        uint8_t **possible_destinations = get_possible_destinations(x, y, colored_piece);
+        uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
+        *possible_destinations = (uint8_t*) NULL;
+        get_possible_destinations(x, y, piece, &possible_destinations);
 
         while (*possible_destinations != NULL)
         {
             if (get_piece((*possible_destinations)[0], (*possible_destinations)[1]) == piece + 6 * (!color))
             {
                 free_possible_destinations(possible_destinations);
+                free(possible_destinations);
                 chessboard[x][y] = King + 6 * color;
                 return true;
             }
             possible_destinations++;            
         }
         free_possible_destinations(possible_destinations);
+        free(possible_destinations);
     }
     chessboard[x][y] = King + 6 * color;
     return false;
