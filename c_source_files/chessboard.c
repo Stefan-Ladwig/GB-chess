@@ -44,7 +44,7 @@ bool get_color(uint8_t colored_piece)
 
 uint8_t get_colorless_piece(uint8_t x, uint8_t y)
 {
-    return chessboard[x][y] - 6 * get_color(get_piece(x, y));
+    return get_piece(x, y) - 6 * get_color(get_piece(x, y));
 }
 
 
@@ -149,9 +149,9 @@ uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
 {
     bool move_is_en_passant = en_passaint(origin_x, origin_y, destination_x, destination_y);
     bool move_is_castling = castling(origin_x, origin_y, destination_y);
-
-    chessboard[destination_x][destination_y] = chessboard[origin_x][origin_y];
-    chessboard[origin_x][origin_y] = no_Piece;
+    
+    set_piece(destination_x, destination_y, get_piece(origin_x, origin_y));
+    set_piece(origin_x, origin_y, no_Piece);
 
     update_king_position(destination_x, destination_y);
     update_castling_pieces(destination_x, destination_y);
@@ -170,8 +170,8 @@ uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
     if (move_is_castling)
     {
         bool castling_short = (destination_y == 6);
-        chessboard[origin_x][7 * castling_short] = no_Piece;
-        chessboard[origin_x][3 + 2 * castling_short] = Rook + 6 * (origin_x == 0);
+        set_piece(origin_x, 7 * castling_short, no_Piece);
+        set_piece(origin_x, 3 + 2 * castling_short, Rook + 6 * (origin_x == 0));
         return Castles;
     }
 
@@ -181,6 +181,35 @@ uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
 
     return no_Event;
 }
+
+
+void revert_move(const uint8_t origin_x, const uint8_t origin_y,
+                 const uint8_t destination_x, const uint8_t destination_y,
+                 const uint8_t piece_taken, const uint8_t event, const uint8_t en_passaint_buffer[2])
+{
+    set_piece(origin_x, origin_y, get_piece(destination_x, destination_y));
+    set_piece(destination_x, destination_y, piece_taken);
+    en_passaint_square[0] = en_passaint_buffer[0];
+    en_passaint_square[1] = en_passaint_buffer[1];
+
+    bool color = get_color(get_piece(origin_x, origin_y));
+
+    switch (event)
+    {
+    case Castles:;
+        bool castling_short = (destination_y == 6);
+        set_piece(origin_x, 7 * castling_short, Rook + 6 * color);
+        set_piece(origin_x, 3 + 2 * castling_short, no_Piece);
+        break;
+    case Promotion:;
+        set_piece(origin_x, origin_y, Pawn + 6 * color);
+        break;
+    case En_passaint:;
+        set_piece(origin_x ,destination_y, Pawn + 6 * color);
+        break;
+    }
+}
+
 
 void add_possible_destination(uint8_t ***possible_destinations, uint8_t new_row,
                               uint8_t new_col, uint8_t *num_solutions)
@@ -209,7 +238,7 @@ void free_possible_destinations(uint8_t **possible_destinations)
 bool is_possible_destination(uint8_t row, uint8_t col, uint8_t new_row, uint8_t new_col)
 {
     return (!piece_on_square(new_row, new_col) ||
-            get_color(chessboard[new_row][new_col]) != get_color(chessboard[row][col]));
+            get_color(get_piece(new_row, new_col)) != get_color(get_piece(row, col)));
 }
 
 
@@ -232,7 +261,7 @@ void get_destinations_from_move_set(uint8_t row, uint8_t col, uint8_t *num_solut
             if (is_possible_destination(row, col, new_row, new_col))
                 add_possible_destination(possible_destinations, new_row, new_col, num_solutions);
             
-            if ((!repeatable) || (repeatable && chessboard[new_row][new_col] != no_Piece))
+            if ((!repeatable) || (repeatable && get_piece(new_row, new_col) != no_Piece))
                 break;
         }
     }
@@ -256,7 +285,7 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
             if (index_out_of_range(new_row))
                 continue;
 
-            if (chessboard[new_row][new_col] == no_Piece)
+            if (get_piece(new_row, new_col) == no_Piece)
                 add_possible_destination(possible_destinations, new_row, new_col, num_solutions);
 
             if (pawn_moved(row, color))
@@ -337,7 +366,7 @@ void get_possible_destinations(const uint8_t origin_x, const uint8_t origin_y, u
 
 bool move_is_possible(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, uint8_t destination_y)
 {
-    uint8_t piece = chessboard[origin_x][origin_y];
+    uint8_t piece = get_piece(origin_x, origin_y);
     uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
     *possible_destinations = (uint8_t*) NULL;
     get_possible_destinations(origin_x, origin_y, piece, &possible_destinations);
@@ -368,7 +397,7 @@ bool king_under_attack(bool color)
     for (uint8_t piece = Queen; piece <= Pawn; piece++)
     {
         uint8_t colored_piece = piece + 6 * color;
-        chessboard[x][y] = colored_piece;
+        set_piece(x, y, colored_piece);
         uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
         *possible_destinations = (uint8_t*) NULL;
         get_possible_destinations(x, y, piece, &possible_destinations);
@@ -380,7 +409,7 @@ bool king_under_attack(bool color)
             {
                 free_possible_destinations(possible_destinations);
                 free(possible_destinations);
-                chessboard[x][y] = King + 6 * color;
+                set_piece(x, y, King + 6 * color);
                 return true;
             }
             i++;            
@@ -388,7 +417,7 @@ bool king_under_attack(bool color)
         free_possible_destinations(possible_destinations);
         free(possible_destinations);
     }
-    chessboard[x][y] = King + 6 * color;
+    set_piece(x, y, King + 6 * color);
     return false;
 }
 
@@ -399,11 +428,13 @@ bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, ui
     bool friendly_king_attacked = false;
     if (move_possible)
     {
-        uint8_t piece_on_destination = chessboard[destination_x][destination_y];
-        move_piece_board(origin_x, origin_y, destination_x, destination_y);
-        friendly_king_attacked = king_under_attack(get_color(chessboard[destination_x][destination_y]));
-        move_piece_board(destination_x, destination_y, origin_x, origin_y);
-        chessboard[destination_x][destination_y] = piece_on_destination;
+        uint8_t piece_on_destination = get_piece(destination_x, destination_y);
+        uint8_t event = move_piece_board(origin_x, origin_y, destination_x, destination_y);
+        uint8_t en_passaint_buffer[2] = { en_passaint_square[0], en_passaint_square[1] };
+
+        friendly_king_attacked = king_under_attack(get_color(get_piece(destination_x, destination_y)));
+
+        revert_move(origin_x, origin_y, destination_x, destination_y, piece_on_destination, event, en_passaint_buffer);
     }
     return move_possible && !friendly_king_attacked;
 }
