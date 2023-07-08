@@ -37,6 +37,7 @@ void init_game()
 {
     init_cursor();
     init_graphics();
+    init_board();
 }
 
 
@@ -131,8 +132,10 @@ void handle_button_a()
             draw_blank_square(selection.x, selection.y + 1 - 2 * get_color(piece));
             break;
         case Checkmate:
+            init_game();
             break;
         case Stalemate:
+            init_game();
             break;
         }
         

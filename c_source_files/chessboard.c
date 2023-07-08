@@ -11,7 +11,7 @@ enum color{white, black};
 
 enum event{no_Event, Castles, Promotion, En_passaint, Checkmate, Stalemate};
 
-uint8_t chessboard[8][8] =
+const uint8_t init_chessboard[8][8] =
 {
     {b_Rook,   b_Knight, b_Bishop, b_Queen,  b_King,   b_Bishop, b_Knight, b_Rook},
     {b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn,   b_Pawn},
@@ -23,11 +23,59 @@ uint8_t chessboard[8][8] =
     {w_Rook,   w_Knight, w_Bishop, w_Queen,  w_King,   w_Bishop, w_Knight, w_Rook}
 };
 
-uint8_t king_positions[2][2] = { {7, 4}, {0, 4} };
+uint8_t chessboard[8][8];
+uint8_t king_positions[2][2];
+bool castle_pieces_moved[2][3];
+uint8_t en_passaint_square[2];
 
-bool castle_pieces_moved[2][3] = { {false, false, false}, {false, false, false} };
 
-uint8_t en_passaint_square[2] = { UINT8_MAX, UINT8_MAX };
+void reset_chessboard()
+{
+    for (uint8_t row = 0; row < 8; row++)
+    {
+        for (uint8_t col = 0; col < 8; col++)
+        {
+            chessboard[row][col] = init_chessboard[row][col];
+        }
+    }
+}
+
+
+void reset_king_positions()
+{
+    king_positions[white][0] = 7;
+    king_positions[white][1] = 4;
+    king_positions[black][0] = 0;
+    king_positions[black][1] = 4;
+}
+
+
+void reset_castle_pieces()
+{
+    for (uint8_t color = 0; color < 2; color++)
+    {
+        for (uint8_t i = 0; i < 3; i++)
+        {
+            castle_pieces_moved[color][i] = false;
+        }
+    }
+}
+
+
+void reset_en_passaint_square()
+{
+    en_passaint_square[0] = UINT8_MAX;
+    en_passaint_square[1] = UINT8_MAX;
+}
+
+
+void init_board()
+{
+    reset_chessboard();
+    reset_king_positions;
+    reset_castle_pieces();
+    reset_en_passaint_square();
+}
 
 
 uint8_t get_piece(uint8_t x, uint8_t y)
@@ -184,13 +232,13 @@ uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
 
     if (move_is_en_passant) return En_passaint;
 
-    if (stale_or_checkmate(!color))
-    {
-        if (king_under_attack(!color))
-            return Checkmate;
-        else
-            return Stalemate;
-    }
+    // if (stale_or_checkmate(!color))
+    // {
+    //     if (king_under_attack(!color))
+    //         return Checkmate;
+    //     else
+    //         return Stalemate;
+    // }
 
     return no_Event;
 }
@@ -204,6 +252,7 @@ void revert_move(const uint8_t origin_x, const uint8_t origin_y,
     set_piece(destination_x, destination_y, piece_taken);
     en_passaint_square[0] = en_passaint_buffer[0];
     en_passaint_square[1] = en_passaint_buffer[1];
+    update_king_position(origin_x, origin_y);
 
     bool color = get_color(get_piece(origin_x, origin_y));
 
@@ -213,6 +262,8 @@ void revert_move(const uint8_t origin_x, const uint8_t origin_y,
         bool castling_short = (destination_y == 6);
         set_piece(origin_x, 7 * castling_short, Rook + 6 * color);
         set_piece(origin_x, 3 + 2 * castling_short, no_Piece);
+        castle_pieces_moved[color][1] = false;
+        castle_pieces_moved[color][2 * castling_short] = false;
         break;
     case Promotion:;
         set_piece(origin_x, origin_y, Pawn + 6 * color);
@@ -512,10 +563,3 @@ bool stale_or_checkmate(bool color)
     }
     return true;
 }
-
-
-// void main()
-// {
-//     move_is_legal(1, 4, 2, 4);
-//     move_piece_board(1, 4, 2, 4);
-// }

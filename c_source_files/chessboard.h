@@ -10,6 +10,8 @@ extern enum colored_chesspiece{w_King = 1, w_Queen, w_Bishop, w_Knight, w_Rook, 
 
 extern enum event{no_Event, Castles, Promotion, En_passaint, Checkmate, Stalemate};
 
+void init_board();
+
 uint8_t get_piece(uint8_t x, uint8_t y);
 
 void set_piece(uint8_t x, uint8_t y, uint8_t piece);
