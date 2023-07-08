@@ -197,7 +197,7 @@ bool king_under_attack(bool color);
 
 
 uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
-                         const uint8_t destination_x, const uint8_t destination_y)
+                         const uint8_t destination_x, const uint8_t destination_y, bool checking_for_mate)
 {
     bool color = get_color(get_piece(origin_x, origin_y));
     bool move_is_en_passant = en_passaint(origin_x, origin_y, destination_x, destination_y);
@@ -232,13 +232,13 @@ uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
 
     if (move_is_en_passant) return En_passaint;
 
-    // if (stale_or_checkmate(!color))
-    // {
-    //     if (king_under_attack(!color))
-    //         return Checkmate;
-    //     else
-    //         return Stalemate;
-    // }
+    if (!checking_for_mate && stale_or_checkmate(!color))
+    {
+        if (king_under_attack(!color))
+            return Checkmate;
+        else
+            return Stalemate;
+    }
 
     return no_Event;
 }
@@ -521,13 +521,28 @@ bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, ui
     {
         uint8_t piece_on_destination = get_piece(destination_x, destination_y);
         uint8_t en_passaint_buffer[2] = { en_passaint_square[0], en_passaint_square[1] };
-        uint8_t event = move_piece_board(origin_x, origin_y, destination_x, destination_y);
+        uint8_t event = move_piece_board(origin_x, origin_y, destination_x, destination_y, false);
 
         friendly_king_attacked = king_under_attack(get_color(get_piece(destination_x, destination_y)));
 
         revert_move(origin_x, origin_y, destination_x, destination_y, piece_on_destination, event, en_passaint_buffer);
     }
     return move_possible && !friendly_king_attacked;
+}
+
+
+
+bool possible_move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, uint8_t destination_y)
+{
+    uint8_t piece_on_destination = get_piece(destination_x, destination_y);
+    uint8_t en_passaint_buffer[2] = { en_passaint_square[0], en_passaint_square[1] };
+    uint8_t event = move_piece_board(origin_x, origin_y, destination_x, destination_y, true);
+
+    bool friendly_king_attacked = king_under_attack(get_color(get_piece(destination_x, destination_y)));
+
+    revert_move(origin_x, origin_y, destination_x, destination_y, piece_on_destination, event, en_passaint_buffer);
+    
+    return !friendly_king_attacked;
 }
 
 
@@ -549,7 +564,7 @@ bool stale_or_checkmate(bool color)
             uint8_t i = 0;
             while (possible_destinations[i] != NULL)
             {
-                if (move_is_legal(row, col, possible_destinations[i][0], possible_destinations[i][1], true))
+                if (possible_move_is_legal(row, col, possible_destinations[i][0], possible_destinations[i][1]))
                 {
                     free_possible_destinations(possible_destinations);
                     free(possible_destinations);

@@ -35,9 +35,9 @@ void init_cursor()
 
 void init_game()
 {
-    init_cursor();
-    init_graphics();
     init_board();
+    init_graphics();
+    init_cursor();
 }
 
 
@@ -110,7 +110,7 @@ void handle_button_a()
     }
     else if (square_selected && move_is_legal(cursor.y, cursor.x, selection.y, selection.x, false))
     {
-        event = move_piece_board(cursor.y, cursor.x, selection.y, selection.x);
+        event = move_piece_board(cursor.y, cursor.x, selection.y, selection.x, false);
 
         uint8_t piece = get_piece(selection.y, selection.x);
         move_piece_screen(cursor.x, cursor.y, selection.x, selection.y, piece);
