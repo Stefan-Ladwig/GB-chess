@@ -147,6 +147,7 @@ void update_castling_pieces(uint8_t x, uint8_t y)
 uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
                          const uint8_t destination_x, const uint8_t destination_y)
 {
+    bool color = get_color(get_piece(destination_x, destination_y));
     bool move_is_en_passant = en_passaint(origin_x, origin_y, destination_x, destination_y);
     bool move_is_castling = castling(origin_x, origin_y, destination_y);
     
@@ -158,7 +159,7 @@ uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
 
     if (pawn_jumped(origin_x, destination_x, destination_y))
     {
-        en_passaint_square[0] = destination_x + 1 - 2 * get_color(get_piece(destination_x, destination_y));
+        en_passaint_square[0] = destination_x + 1 - 2 * color;
         en_passaint_square[1] = destination_y;
     }
     else
@@ -171,13 +172,21 @@ uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
     {
         bool castling_short = (destination_y == 6);
         set_piece(origin_x, 7 * castling_short, no_Piece);
-        set_piece(origin_x, 3 + 2 * castling_short, Rook + 6 * (origin_x == 0));
+        set_piece(origin_x, 3 + 2 * castling_short, Rook + 6 * color);
         return Castles;
     }
 
     if (pawn_promotes(destination_x, destination_y)) return Promotion;
 
     if (move_is_en_passant) return En_passaint;
+
+    if (stale_or_checkmate(!color))
+    {
+        if (king_under_attack(!color))
+            return Checkmate;
+        else
+            return Stalemate;
+    }
 
     return no_Event;
 }
@@ -391,22 +400,13 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
 }
 
 
-void get_possible_destinations(const uint8_t origin_x, const uint8_t origin_y, uint8_t piece,
-                               uint8_t ***possible_destinations)
-{
-    uint8_t num_solutions = 0;
-
-    get_destinations_for_piece(piece, origin_x, origin_y,
-                               possible_destinations, &num_solutions);
-}
-
-
 bool move_is_possible(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, uint8_t destination_y)
 {
     uint8_t piece = get_piece(origin_x, origin_y);
     uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
     *possible_destinations = (uint8_t*) NULL;
-    get_possible_destinations(origin_x, origin_y, piece, &possible_destinations);
+    uint8_t num_solutions = 0;
+    get_destinations_for_piece(piece, origin_x, origin_y, &possible_destinations, &num_solutions);
 
     uint8_t i = 0;
     while (possible_destinations[i] != NULL)
@@ -437,7 +437,8 @@ bool king_under_attack(bool color)
         set_piece(x, y, colored_piece);
         uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
         *possible_destinations = (uint8_t*) NULL;
-        get_possible_destinations(x, y, piece, &possible_destinations);
+        uint8_t num_solutions = 0; 
+        get_destinations_for_piece(piece, x, y, &possible_destinations, &num_solutions);
 
         uint8_t i = 0;
         while (possible_destinations[i] != NULL)
@@ -474,4 +475,38 @@ bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, ui
         revert_move(origin_x, origin_y, destination_x, destination_y, piece_on_destination, event, en_passaint_buffer);
     }
     return move_possible && !friendly_king_attacked;
+}
+
+
+bool stale_or_checkmate(bool color)
+{
+    for(uint8_t row = 0; row < 8; row++)
+    {
+        for(uint8_t col = 0; col < 8; col++)
+        {
+            uint8_t piece = get_piece(row, col);
+
+            if (piece == no_Piece || get_color(piece) != color) continue;
+
+            uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
+            *possible_destinations = (uint8_t*) NULL;
+            uint8_t num_solutions = 0; 
+            get_destinations_for_piece(piece, row, col, &possible_destinations, &num_solutions);
+            
+            uint8_t i = 0;
+            while (possible_destinations[i] != NULL)
+            {
+                if (move_is_legal(row, col, possible_destinations[i][0], possible_destinations[i][1]))
+                {
+                    free_possible_destinations(possible_destinations);
+                    free(possible_destinations);
+                    return false;
+                }
+                i++;            
+            }
+            free_possible_destinations(possible_destinations);
+            free(possible_destinations);
+        }
+    }
+    return true;
 }
