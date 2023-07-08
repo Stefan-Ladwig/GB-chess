@@ -107,7 +107,7 @@ void handle_button_a()
         selection.y = cursor.y;
         square_selected = true;
     }
-    else if (square_selected && move_is_legal(cursor.y, cursor.x, selection.y, selection.x))
+    else if (square_selected && move_is_legal(cursor.y, cursor.x, selection.y, selection.x, false))
     {
         event = move_piece_board(cursor.y, cursor.x, selection.y, selection.x);
 

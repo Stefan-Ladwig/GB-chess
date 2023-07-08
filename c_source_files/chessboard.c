@@ -144,10 +144,14 @@ void update_castling_pieces(uint8_t x, uint8_t y)
 }
 
 
+bool stale_or_checkmate(bool color);
+bool king_under_attack(bool color);
+
+
 uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
                          const uint8_t destination_x, const uint8_t destination_y)
 {
-    bool color = get_color(get_piece(destination_x, destination_y));
+    bool color = get_color(get_piece(origin_x, origin_y));
     bool move_is_en_passant = en_passaint(origin_x, origin_y, destination_x, destination_y);
     bool move_is_castling = castling(origin_x, origin_y, destination_y);
     
@@ -275,9 +279,6 @@ void get_destinations_from_move_set(uint8_t row, uint8_t col, uint8_t *num_solut
         }
     }
 }
-
-
-bool king_under_attack(bool color);
 
 
 void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
@@ -460,9 +461,10 @@ bool king_under_attack(bool color)
 }
 
 
-bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, uint8_t destination_y)
+bool move_is_legal(uint8_t origin_x, uint8_t origin_y, uint8_t destination_x, uint8_t destination_y, bool move_possible)
 {
-    bool move_possible = move_is_possible(origin_x, origin_y, destination_x, destination_y);
+    if (!move_possible)
+        move_possible = move_is_possible(origin_x, origin_y, destination_x, destination_y);
     bool friendly_king_attacked = false;
     if (move_possible)
     {
@@ -496,7 +498,7 @@ bool stale_or_checkmate(bool color)
             uint8_t i = 0;
             while (possible_destinations[i] != NULL)
             {
-                if (move_is_legal(row, col, possible_destinations[i][0], possible_destinations[i][1]))
+                if (move_is_legal(row, col, possible_destinations[i][0], possible_destinations[i][1], true))
                 {
                     free_possible_destinations(possible_destinations);
                     free(possible_destinations);
@@ -510,3 +512,10 @@ bool stale_or_checkmate(bool color)
     }
     return true;
 }
+
+
+// void main()
+// {
+//     move_is_legal(1, 4, 2, 4);
+//     move_piece_board(1, 4, 2, 4);
+// }
