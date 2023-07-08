@@ -490,7 +490,7 @@ bool king_under_attack(bool color)
         uint8_t **possible_destinations = malloc(sizeof(uint8_t*));
         *possible_destinations = (uint8_t*) NULL;
         uint8_t num_solutions = 0; 
-        get_destinations_for_piece(piece, x, y, &possible_destinations, &num_solutions);
+        get_destinations_for_piece(colored_piece, x, y, &possible_destinations, &num_solutions);
 
         uint8_t i = 0;
         while (possible_destinations[i] != NULL)
