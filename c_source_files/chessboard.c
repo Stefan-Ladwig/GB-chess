@@ -72,7 +72,7 @@ void reset_en_passaint_square()
 void init_board()
 {
     reset_chessboard();
-    reset_king_positions;
+    reset_king_positions();
     reset_castle_pieces();
     reset_en_passaint_square();
 }
