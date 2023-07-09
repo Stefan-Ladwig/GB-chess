@@ -100,6 +100,33 @@ void handle_dpad(uint8_t joypad_state)
 }
 
 
+void handle_promotion()
+{
+    uint8_t piece = Queen;
+    bool color = player;
+    draw_piece(selection.x, selection.y, Queen + 6 * color);
+    set_piece(selection.y, selection.x, Queen + 6 * color);
+
+    waitpadup();
+    joypad_state = joypad();
+
+    while (!(joypad_state & J_A))
+    {
+        if (joypad_state & J_LEFT || joypad_state & J_RIGHT)
+        {
+            if (joypad_state & J_RIGHT) piece++;
+            else if (joypad_state & J_LEFT) piece--;
+            piece = (piece - 2 + 4) % 4 + 2;
+
+            draw_piece(selection.x, selection.y, piece + 6 * color);
+            waitpadup();
+        }
+        joypad_state = joypad();
+    }
+    set_piece(selection.y, selection.x, piece + 6 * color);
+}
+
+
 void handle_button_a()
 {
     if (!square_selected && piece_on_square(cursor.y, cursor.x) &&
@@ -126,8 +153,7 @@ void handle_button_a()
                               Rook + 6 * get_color(piece));
             break;
         case Promotion:;
-            set_piece(selection.y, selection.x, Queen + 6 * get_color(piece));
-            draw_piece(selection.x, selection.y, Queen + 6 * get_color(piece));
+            handle_promotion();
             break;
         case En_passaint:;
             set_piece(selection.y + 1 - 2 * get_color(piece), selection.x, no_Piece);
