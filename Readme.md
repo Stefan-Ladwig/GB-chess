@@ -1,5 +1,7 @@
 ## Programming Chess from scratch for the original Gameboy
 
+![example_pic](images/example_pic.png)
+
 chess piece Pixel Art was created by BerryArray, downloaded [here](https://berryarray.itch.io/chess-pieces-16x16-one-bit)
 
 current status:
