@@ -9,7 +9,7 @@ enum chesspiece{no_Piece, King, Queen, Bishop, Knight, Rook, Pawn};
 
 enum color{white, black};
 
-enum event{no_Event, Castles, Promotion, En_passaint, Checkmate, Stalemate};
+enum event{no_Event, Castles, Promotion, En_passaint, Checkmate, Remis};
 
 const uint8_t init_chessboard[8][8] =
 {
@@ -194,6 +194,7 @@ void update_castling_pieces(uint8_t x, uint8_t y)
 
 bool stale_or_checkmate(bool color);
 bool king_under_attack(bool color);
+bool insufficient_material();
 
 
 uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
@@ -237,8 +238,11 @@ uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,
         if (king_under_attack(!color))
             return Checkmate;
         else
-            return Stalemate;
+            return Remis;
     }
+
+    if (!checking_for_mate && insufficient_material())
+        return Remis;
 
     return no_Event;
 }
@@ -574,6 +578,28 @@ bool stale_or_checkmate(bool color)
             }
             free_possible_destinations(possible_destinations);
             free(possible_destinations);
+        }
+    }
+    return true;
+}
+
+
+bool insufficient_material()
+{
+    bool knight_or_bishop = false;
+    for(uint8_t row = 0; row < 8; row++)
+    {
+        for(uint8_t col = 0; col < 8; col++)
+        {
+            uint8_t piece = get_colorless_piece(row, col);
+
+            if (piece == no_Piece || piece == King) continue;
+            
+            if (piece != Knight && piece != Bishop) return false;
+
+            if (knight_or_bishop == true) return false;
+
+            knight_or_bishop = true;
         }
     }
     return true;

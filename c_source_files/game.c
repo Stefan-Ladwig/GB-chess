@@ -134,7 +134,7 @@ void handle_button_a()
         case Checkmate:
             init_game();
             break;
-        case Stalemate:
+        case Remis:
             init_game();
             break;
         }
