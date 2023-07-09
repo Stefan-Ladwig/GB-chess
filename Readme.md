@@ -1,6 +1,6 @@
 ## Programming Chess from scratch for the original Gameboy
 
-chess piece bitart from <link>
+chess piece bitart was created by BerryArray, downloaded [here](https://berryarray.itch.io/chess-pieces-16x16-one-bit)
 
 current status:
 - rom compiles
