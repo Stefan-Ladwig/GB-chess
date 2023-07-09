@@ -5,7 +5,7 @@
 chess piece Pixel Art was created by BerryArray, downloaded [here](https://berryarray.itch.io/chess-pieces-16x16-one-bit)
 
 current status:
-- rom compiles
+- rom compiles -> [last compiled rom](/compiled_roms/Chess.gb) (not tested on original hardware! Use at own risk)
 - game playable -> regular moves working
 - all special rules/moves implemented:
     first Pawn move, Castling, Promotion, En passaint, Draw and Checkmate, Moves leaving King under attack not possible
