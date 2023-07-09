@@ -7,13 +7,10 @@
 
 const uint8_t DPAD_PRESSED = J_LEFT | J_RIGHT | J_UP | J_DOWN;
 
-uint8_t joypad_state = 0;
-
-bool square_selected = false;
-
-bool player = 0;
-
-uint8_t event = no_Event;
+uint8_t joypad_state;
+bool square_selected;
+bool player;
+uint8_t event;
 
 struct pos {
     uint8_t x;
@@ -38,6 +35,11 @@ void init_game()
     init_board();
     init_graphics();
     init_cursor();
+
+    joypad_state = 0;
+    square_selected = false;
+    player = 0;
+    event = no_Event;
 }
 
 
