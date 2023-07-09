@@ -276,6 +276,8 @@ void handle_input()
     wait_vbl_done();
     joypad_state = joypad();
 
+    if (joypad_state == 0x00) return;
+
     if (joypad_state & DPAD_PRESSED)
     {
         handle_dpad(joypad_state);
@@ -288,6 +290,5 @@ void handle_input()
     {
         handle_button_select();
     }
-
     waitpadup();
 }
