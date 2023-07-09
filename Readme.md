@@ -6,12 +6,11 @@ current status:
 - rom compiles
 - game playable -> regular moves working
 - special rules/moves:
-    -> implemented enterily: first Pawn move, Castling, En passaint, Stale- and Checkmate, Moves leaving King under attack not possible
+    -> implemented enterily: first Pawn move, Castling, En passaint, Draw and Checkmate, Moves leaving King under attack not possible
     -> implemented partially: Promotion, checking for draw
 
 left to implement:
 - choosing piece when promoting
-- ending game in draw, when material is insufficient
 - option for a player to resign or offer a draw
 - chess clock
     -> font for digits
