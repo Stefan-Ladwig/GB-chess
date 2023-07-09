@@ -12,6 +12,7 @@ current status:
 left to implement:
 - choosing piece when promoting
 - ending game in draw, when material is insufficient
+- option for a player to resign or offer a draw
 - chess clock
     -> font for digits
     -> menu to set/reset time
