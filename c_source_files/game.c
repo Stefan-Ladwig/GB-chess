@@ -152,6 +152,25 @@ void handle_button_a()
     }
 }
 
+
+void handle_button_select()
+{
+    while (joypad_state & J_SELECT)
+    {
+        if (joypad_state & J_A)
+        {
+            init_game();
+        }
+        else if (joypad_state & J_B)
+        {
+            init_game();
+        }
+
+        joypad_state = joypad();
+    }
+}
+
+
 void handle_input()
 {
     wait_vbl_done();
@@ -164,6 +183,10 @@ void handle_input()
     else if (joypad_state & J_A)
     {
         handle_button_a();
+    }
+    else if (joypad_state & J_SELECT)
+    {
+        handle_button_select();
     }
 
     waitpadup();
