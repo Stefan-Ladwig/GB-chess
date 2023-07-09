@@ -5,20 +5,19 @@ chess piece bitart from <link>
 current status:
 - rom compiles
 - game playable -> regular moves working
-- special rules/moves:
-    -> implemented enterily: first Pawn move, Castling, En passaint, Draw and Checkmate, Moves leaving King under attack not possible
-    -> implemented partially: Promotion, checking for draw
+- all special rules/moves implemented:
+    first Pawn move, Castling, Promotion, En passaint, Draw and Checkmate, Moves leaving King under attack not possible
+- replay mode
 
 left to implement:
-- choosing piece when promoting
+- end game screen
 - option for a player to resign or offer a draw
 - chess clock
     -> font for digits
     -> menu to set/reset time
     -> keeping track of time
     -> ending, when time ran out
-- after selecting a piece, only squares that a legal move leads to are selectable
-- keeping track of every move, to review after game
+- after selecting a piece, only legal squares are selectable
 - calculating and displaying material advantage
 
 (with a lot of enthusiasm:
