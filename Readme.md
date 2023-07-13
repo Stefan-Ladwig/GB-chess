@@ -10,16 +10,13 @@ current status:
 - all special rules/moves implemented:
     first Pawn move, Castling, Promotion, En passaint, Draw and Checkmate, Moves leaving King under attack not possible
 - replay mode
+- chess clock
+- end game screen
 
 left to implement:
-- end game screen
-- option for a player to resign or offer a draw
-- chess clock
-    - font for digits
-    - menu to set/reset time
-    - keeping track of time
-    - ending, when time ran out
-- after selecting a piece, only legal squares are selectable
+- title screen
+- menu to adjust chess clock
+- at start of turn, move cursor to last moved piece
 - calculating and displaying material advantage
 
 <br>maybe with a lot of enthusiasm:
