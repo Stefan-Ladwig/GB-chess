@@ -14,6 +14,7 @@ bool replay_mode = false;
 uint8_t event;
 uint8_t **list_of_moves;
 uint16_t num_moves;
+uint8_t *tile_buffer = (uint8_t*) NULL;
 
 struct pos {
     uint8_t x;
@@ -159,6 +160,38 @@ void handle_promotion()
 }
 
 
+void replay();
+
+
+void handle_endgame(uint8_t event)
+{
+    HIDE_SPRITES;
+    uint8_t *tile_buffer = malloc(20 * 3);
+    show_endgame_screen(event, player, tile_buffer);
+    waitpadup();
+    joypad_state = joypad();
+
+    while (!joypad_state)
+    {
+        joypad_state = joypad();
+    }
+    
+    hide_endgame_screen(event, player, tile_buffer);
+    free(tile_buffer);
+
+    while (joypad_state & J_SELECT)
+    {
+        if(joypad_state & J_START)
+        {
+            replay();
+            return;
+        }
+        joypad_state = joypad();
+    }
+    init_game();
+}
+
+
 void handle_button_a()
 {
     if (!square_selected && piece_on_square(cursor.y, cursor.x) &&
@@ -194,10 +227,10 @@ void handle_button_a()
             draw_blank_square(selection.x, selection.y + 1 - 2 * get_color(piece));
             break;
         case Checkmate:
-            init_game();
+            handle_endgame(Checkmate);
             break;
         case Remis:
-            init_game();
+            handle_endgame(Remis);
             break;
         }
         
@@ -244,6 +277,7 @@ void replay()
         }
         joypad_state = joypad();
     }
+    num_moves = current_move;
     replay_mode = false;
 }
 

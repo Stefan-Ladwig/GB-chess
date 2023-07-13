@@ -2,16 +2,25 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "chessboard.h"
 #include "../resources/chess_tilemap.h"
 #include "../resources/chess_tiles.h"
 #include "../resources/chess_sprite_tiles.h"
+#include "../resources/chess_window_tilemap.h"
 
 
 void init_background()
 {
-    set_bkg_data(0, 99, chess_tiles);
+    set_bkg_data(0, 167, chess_tiles);
     set_bkg_tiles(0, 0, 20, 18, chess_tilemap);
     SHOW_BKG;
+}
+
+
+void init_window()
+{
+    set_win_tiles(0, 0, 20, 18, chess_window_tilemap);
+    move_win(7, 0);
 }
 
 
@@ -30,7 +39,6 @@ void init_sprites()
     {
         set_sprite_tile(j + 8, j / 2);
     }
-
     SHOW_SPRITES;
 }
 
@@ -41,7 +49,10 @@ void init_graphics()
     DISPLAY_OFF;
 
     init_background();
+    init_window();
     init_sprites();
+
+    HIDE_WIN;
 
     DISPLAY_ON;
     enable_interrupts();
@@ -122,4 +133,34 @@ void move_piece_screen(uint8_t origin_x, uint8_t origin_y,
 {
     draw_blank_square(origin_x, origin_y);
     draw_piece(destination_x, destination_y, piece);
+}
+
+
+uint8_t get_row_endgame_window(uint8_t event, bool player)
+{
+    uint8_t row = 0;
+
+    if (event == Remis)
+        row = 7;
+    else if (event == Checkmate)
+        row = 5 + player * 5;
+
+    return row;
+}
+
+
+void show_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer)
+{
+    uint8_t row = get_row_endgame_window(ending_event, player);
+
+    get_bkg_tiles(1, row, 16, 3, buffer);
+    set_bkg_tiles(1, row, 16, 3, chess_window_tilemap + (16 * (row-1-player)));
+}
+
+
+void hide_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer)
+{
+    uint8_t row = get_row_endgame_window(ending_event, player);
+    
+    set_bkg_tiles(1, row, 16, 3, buffer);
 }

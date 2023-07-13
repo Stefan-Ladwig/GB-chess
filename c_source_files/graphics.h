@@ -20,4 +20,8 @@ void hide_cursor();
 
 void hide_selection();
 
+void show_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer);
+
+void hide_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer);
+
 #endif
