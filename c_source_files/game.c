@@ -304,11 +304,11 @@ void handle_button_select()
     {
         if (joypad_state & J_A)
         {
-            init_game();
+            handle_endgame(Remis);
         }
         else if (joypad_state & J_B)
         {
-            init_game();
+            handle_endgame(Checkmate);
         }
         else if (joypad_state & J_START)
         {
