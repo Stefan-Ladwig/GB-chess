@@ -182,7 +182,7 @@ void replay();
 void handle_endgame(uint8_t event)
 {
     HIDE_SPRITES;
-    uint8_t *tile_buffer = malloc(20 * 3);
+    uint8_t *tile_buffer = malloc(16 * 3);
     show_endgame_screen(event, player, tile_buffer);
     waitpadup();
     joypad_state = joypad();
