@@ -185,6 +185,7 @@ void replay();
 void handle_endgame(uint8_t event)
 {
     HIDE_SPRITES;
+    pause_timer();
     uint8_t *tile_buffer = malloc(16 * 3);
     show_endgame_screen(event, player, tile_buffer);
     waitpadup();

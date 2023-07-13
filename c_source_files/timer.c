@@ -31,7 +31,8 @@ void interruptTIM()
     update_timer(player, time[player]);
     timer_delay = 0;
     
-    if (time[player] == 0) handle_endgame(Checkmate);
+    if (time[player] == 0)
+        handle_endgame(Checkmate);
 }
 
 
@@ -41,12 +42,13 @@ void init_timer()
     {
         TAC_REG = 0b100;
         TMA_REG = 0;
+        remove_TIM(interruptTIM);
         add_TIM(interruptTIM);
     }
     pause_timer();
 
-    time[0] = 10;
-    time[1] = 10;
+    time[0] = 15 * 60;
+    time[1] = 15 * 60;
     
     update_timer(0, time[0]);
     update_timer(1, time[1]);
