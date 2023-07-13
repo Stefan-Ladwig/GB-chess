@@ -149,16 +149,16 @@ uint8_t get_row_endgame_window(uint8_t event, bool player)
 
 void show_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer)
 {
-    uint8_t row = get_row_endgame_window(ending_event, player);
+    uint8_t row = get_row_endgame_window(ending_event, !player);
 
     get_bkg_tiles(1, row, 16, 3, buffer);
-    set_bkg_tiles(1, row, 16, 3, chess_window_tilemap + (16 * (row - 1 - player * (ending_event != Remis))));
+    set_bkg_tiles(1, row, 16, 3, chess_window_tilemap + (16 * (row - 1 - !player * (ending_event != Remis))));
 }
 
 
 void hide_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer)
 {
-    uint8_t row = get_row_endgame_window(ending_event, player);
+    uint8_t row = get_row_endgame_window(ending_event, !player);
     
     set_bkg_tiles(1, row, 16, 3, buffer);
 }
