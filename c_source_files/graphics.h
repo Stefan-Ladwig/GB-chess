@@ -18,6 +18,8 @@ void draw_piece(uint8_t x, uint8_t y, uint8_t piece);
 void move_piece_screen(uint8_t origin_x, uint8_t origin_y, 
                        uint8_t destination_x, uint8_t destination_y, uint8_t piece);
 
+void update_timer(bool player, uint16_t time);
+
 void hide_cursor();
 
 void hide_selection();

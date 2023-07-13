@@ -179,3 +179,15 @@ void hide_promotion_screen(bool player, uint8_t *buffer)
 
     set_bkg_tiles(1, row, 16, 4, buffer);
 }
+
+
+void update_timer(bool player, uint16_t time)
+{
+    uint8_t minutes = time / 60;
+    uint8_t seconds = time % 60;
+
+    set_bkg_tile_xy(18, 10 - player * 7, 128 + minutes / 10);
+    set_bkg_tile_xy(18, 11 - player * 7, 128 + minutes % 10);
+    set_bkg_tile_xy(18, 13 - player * 7, 128 + seconds / 10);
+    set_bkg_tile_xy(18, 14 - player * 7, 128 + seconds % 10);
+}
