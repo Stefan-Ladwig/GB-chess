@@ -137,8 +137,12 @@ void handle_promotion()
 {
     uint8_t piece = Queen;
     bool color = player;
-    draw_piece(selection.x, selection.y, Queen + 6 * color);
-    set_piece(selection.y, selection.x, Queen + 6 * color);
+    uint8_t *tile_buffer = malloc(4 * 16);
+    show_promotion_screen(player, tile_buffer);
+
+    hide_selection();
+    uint8_t y_screen = 24 + player * 12 * 8;
+    move_cursor_sprites_absolute(16, y_screen);
 
     waitpadup();
     joypad_state = joypad();
@@ -151,12 +155,16 @@ void handle_promotion()
             else if (joypad_state & J_LEFT) piece--;
             piece = (piece - 2 + 4) % 4 + 2;
 
-            draw_piece(selection.x, selection.y, piece + 6 * color);
+            move_cursor_sprites_absolute(16 + (piece - 2) * 32, y_screen);
+
             waitpadup();
         }
         joypad_state = joypad();
     }
+    hide_promotion_screen(player, tile_buffer);
+    move_cursor_sprites(selection.x, selection.y);
     set_piece(selection.y, selection.x, piece + 6 * color);
+    draw_piece(selection.x, selection.y, piece + 6 * color);
 }
 
 
