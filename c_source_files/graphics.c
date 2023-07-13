@@ -17,13 +17,6 @@ void init_background()
 }
 
 
-void init_window()
-{
-    set_win_tiles(0, 0, 20, 18, chess_window_tilemap);
-    move_win(7, 0);
-}
-
-
 void init_sprites()
 {
     SPRITES_8x8;
@@ -49,7 +42,6 @@ void init_graphics()
     DISPLAY_OFF;
 
     init_background();
-    init_window();
     init_sprites();
 
     HIDE_WIN;
@@ -160,7 +152,7 @@ void show_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer)
     uint8_t row = get_row_endgame_window(ending_event, player);
 
     get_bkg_tiles(1, row, 16, 3, buffer);
-    set_bkg_tiles(1, row, 16, 3, chess_window_tilemap + (16 * (row - 1 - player)));
+    set_bkg_tiles(1, row, 16, 3, chess_window_tilemap + (16 * (row - 1 - player * (ending_event != Remis))));
 }
 
 
