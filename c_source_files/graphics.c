@@ -123,3 +123,15 @@ void move_piece_screen(uint8_t origin_x, uint8_t origin_y,
     draw_blank_square(origin_x, origin_y);
     draw_piece(destination_x, destination_y, piece);
 }
+
+
+void update_timer(bool player, uint16_t time)
+{
+    uint8_t minutes = time / 60;
+    uint8_t seconds = time % 60;
+
+    set_bkg_tile_xy(18, 10 - player * 7, 128 + minutes / 10);
+    set_bkg_tile_xy(18, 11 - player * 7, 128 + minutes % 10);
+    set_bkg_tile_xy(18, 13 - player * 7, 128 + seconds / 10);
+    set_bkg_tile_xy(18, 14 - player * 7, 128 + seconds % 10);
+}
