@@ -3,13 +3,6 @@
 
 #include <stdint.h>
 
-extern enum chesspiece{no_Piece, King, Queen, Bishop, Knight, Rook, Pawn};
-
-extern enum colored_chesspiece{w_King = 1, w_Queen, w_Bishop, w_Knight, w_Rook, w_Pawn, 
-                               b_King, b_Queen, b_Bishop, b_Knight, b_Rook, b_Pawn};
-
-extern enum event{no_Event, Castles, Promotion, En_passaint, Checkmate, Remis};
-
 void init_board();
 
 uint8_t get_piece(uint8_t x, uint8_t y);

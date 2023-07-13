@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "chessboard.h"
+#include "enums.h"
 #include "../resources/chess_tilemap.h"
 #include "../resources/chess_tiles.h"
 #include "../resources/chess_sprite_tiles.h"

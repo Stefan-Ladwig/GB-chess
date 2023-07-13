@@ -8,4 +8,6 @@ void init_game();
 
 void handle_input();
 
+void handle_endgame(uint8_t event);
+
 #endif

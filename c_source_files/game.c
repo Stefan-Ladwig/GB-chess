@@ -5,6 +5,7 @@
 #include "chessboard.h"
 #include "graphics.h"
 #include "timer.h"
+#include "enums.h"
 
 const uint8_t DPAD_PRESSED = J_LEFT | J_RIGHT | J_UP | J_DOWN;
 
