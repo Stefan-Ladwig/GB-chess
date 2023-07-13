@@ -77,16 +77,22 @@ void hide_selection()
 }
 
 
+void move_cursor_sprites_absolute(uint8_t x, uint8_t y)
+{    
+    move_sprite( 8,      x,  8 + y);
+    move_sprite( 9,      x, 16 + y);
+    move_sprite(10,  8 + x, 24 + y);
+    move_sprite(11, 16 + x, 24 + y);
+    move_sprite(12, 24 + x, 16 + y);
+    move_sprite(13, 24 + x,  8 + y);
+    move_sprite(14, 16 + x,      y);
+    move_sprite(15,  8 + x,      y);
+}
+
+
 void move_cursor_sprites(uint8_t x, uint8_t y)
 {    
-    move_sprite( 8,  8 + x * 16, 24 + y * 16);
-    move_sprite( 9,  8 + x * 16, 32 + y * 16);
-    move_sprite(10, 16 + x * 16, 40 + y * 16);
-    move_sprite(11, 24 + x * 16, 40 + y * 16);
-    move_sprite(12, 32 + x * 16, 32 + y * 16);
-    move_sprite(13, 32 + x * 16, 24 + y * 16);
-    move_sprite(14, 24 + x * 16, 16 + y * 16);
-    move_sprite(15, 16 + x * 16, 16 + y * 16);
+    move_cursor_sprites_absolute(16 * x + 8, 16 * y + 16);
 }
 
 
@@ -154,7 +160,7 @@ void show_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer)
     uint8_t row = get_row_endgame_window(ending_event, player);
 
     get_bkg_tiles(1, row, 16, 3, buffer);
-    set_bkg_tiles(1, row, 16, 3, chess_window_tilemap + (16 * (row-1-player)));
+    set_bkg_tiles(1, row, 16, 3, chess_window_tilemap + (16 * (row - 1 - player)));
 }
 
 
@@ -163,4 +169,21 @@ void hide_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer)
     uint8_t row = get_row_endgame_window(ending_event, player);
     
     set_bkg_tiles(1, row, 16, 3, buffer);
+}
+
+
+void show_promotion_screen(bool player, uint8_t *buffer)
+{
+    uint8_t row = 1 + player * 12;
+
+    get_bkg_tiles(1, row, 16, 4, buffer);
+    set_bkg_tiles(1, row, 16, 4, chess_window_tilemap + (16 * (row - 1 - player)));
+}
+
+
+void hide_promotion_screen(bool player, uint8_t *buffer)
+{
+    uint8_t row = 1 + player * 12;
+
+    set_bkg_tiles(1, row, 16, 4, buffer);
 }
