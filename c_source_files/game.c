@@ -15,6 +15,7 @@ uint8_t event;
 uint8_t **list_of_moves;
 uint16_t num_moves;
 uint8_t *tile_buffer = (uint8_t*) NULL;
+uint8_t pawn_promotion[2][8] = {{no_Piece}};
 
 struct pos {
     uint8_t x;
@@ -135,36 +136,43 @@ void handle_dpad(uint8_t joypad_state)
 
 void handle_promotion()
 {
-    uint8_t piece = Queen;
-    bool color = player;
-    uint8_t *tile_buffer = malloc(4 * 16);
-    show_promotion_screen(player, tile_buffer);
+    uint8_t piece = no_Piece;
 
-    hide_selection();
-    uint8_t y_screen = 24 + player * 12 * 8;
-    move_cursor_sprites_absolute(16, y_screen);
-
-    waitpadup();
-    joypad_state = joypad();
-
-    while (!(joypad_state & J_A))
+    if (replay_mode)
+        piece = pawn_promotion[player][selection.x];
+    else
     {
-        if (joypad_state & J_LEFT || joypad_state & J_RIGHT)
-        {
-            if (joypad_state & J_RIGHT) piece++;
-            else if (joypad_state & J_LEFT) piece--;
-            piece = (piece - 2 + 4) % 4 + 2;
+        piece = Queen;
+        uint8_t *tile_buffer = malloc(4 * 16);
+        show_promotion_screen(player, tile_buffer);
 
-            move_cursor_sprites_absolute(16 + (piece - 2) * 32, y_screen);
+        hide_selection();
+        uint8_t y_screen = 24 + player * 12 * 8;
+        move_cursor_sprites_absolute(16, y_screen);
 
-            waitpadup();
-        }
+        waitpadup();
         joypad_state = joypad();
+
+        while (!(joypad_state & J_A))
+        {
+            if (joypad_state & J_LEFT || joypad_state & J_RIGHT)
+            {
+                if (joypad_state & J_RIGHT) piece++;
+                else if (joypad_state & J_LEFT) piece--;
+                piece = (piece - 2 + 4) % 4 + 2;
+
+                move_cursor_sprites_absolute(16 + (piece - 2) * 32, y_screen);
+
+                waitpadup();
+            }
+            joypad_state = joypad();
+        }
+        hide_promotion_screen(player, tile_buffer);
+        move_cursor_sprites(selection.x, selection.y);
+        pawn_promotion[player][selection.x] = piece;
     }
-    hide_promotion_screen(player, tile_buffer);
-    move_cursor_sprites(selection.x, selection.y);
-    set_piece(selection.y, selection.x, piece + 6 * color);
-    draw_piece(selection.x, selection.y, piece + 6 * color);
+    set_piece(selection.y, selection.x, piece + 6 * player);
+    draw_piece(selection.x, selection.y, piece + 6 * player);
 }
 
 
