@@ -15,6 +15,8 @@ bool replay_mode = false;
 uint8_t event;
 uint8_t **list_of_moves;
 uint16_t num_moves;
+uint8_t *tile_buffer = (uint8_t*) NULL;
+uint8_t pawn_promotion[2][8] = {{no_Piece}};
 
 struct pos {
     uint8_t x;
@@ -136,28 +138,75 @@ void handle_dpad(uint8_t joypad_state)
 
 void handle_promotion()
 {
-    uint8_t piece = Queen;
-    bool color = player;
-    draw_piece(selection.x, selection.y, Queen + 6 * color);
-    set_piece(selection.y, selection.x, Queen + 6 * color);
+    uint8_t piece = no_Piece;
 
+    if (replay_mode)
+        piece = pawn_promotion[player][selection.x];
+    else
+    {
+        piece = Queen;
+        uint8_t *tile_buffer = malloc(4 * 16);
+        show_promotion_screen(player, tile_buffer);
+
+        hide_selection();
+        uint8_t y_screen = 24 + player * 12 * 8;
+        move_cursor_sprites_absolute(16, y_screen);
+
+        waitpadup();
+        joypad_state = joypad();
+
+        while (!(joypad_state & J_A))
+        {
+            if (joypad_state & J_LEFT || joypad_state & J_RIGHT)
+            {
+                if (joypad_state & J_RIGHT) piece++;
+                else if (joypad_state & J_LEFT) piece--;
+                piece = (piece - 2 + 4) % 4 + 2;
+
+                move_cursor_sprites_absolute(16 + (piece - 2) * 32, y_screen);
+
+                waitpadup();
+            }
+            joypad_state = joypad();
+        }
+        hide_promotion_screen(player, tile_buffer);
+        move_cursor_sprites(selection.x, selection.y);
+        pawn_promotion[player][selection.x] = piece;
+    }
+    set_piece(selection.y, selection.x, piece + 6 * player);
+    draw_piece(selection.x, selection.y, piece + 6 * player);
+}
+
+
+void replay();
+
+
+void handle_endgame(uint8_t event)
+{
+    HIDE_SPRITES;
+    uint8_t *tile_buffer = malloc(16 * 3);
+    show_endgame_screen(event, player, tile_buffer);
     waitpadup();
     joypad_state = joypad();
 
-    while (!(joypad_state & J_A))
+    while (!joypad_state)
     {
-        if (joypad_state & J_LEFT || joypad_state & J_RIGHT)
-        {
-            if (joypad_state & J_RIGHT) piece++;
-            else if (joypad_state & J_LEFT) piece--;
-            piece = (piece - 2 + 4) % 4 + 2;
+        joypad_state = joypad();
+    }
+    
+    hide_endgame_screen(event, player, tile_buffer);
+    free(tile_buffer);
 
-            draw_piece(selection.x, selection.y, piece + 6 * color);
-            waitpadup();
+    while (joypad_state & J_SELECT)
+    {
+        if(joypad_state & J_START)
+        {
+            replay();
+            return;
         }
         joypad_state = joypad();
     }
-    set_piece(selection.y, selection.x, piece + 6 * color);
+    init_game();
 }
 
 
@@ -197,10 +246,10 @@ void handle_button_a()
             draw_blank_square(selection.x, selection.y + 1 - 2 * get_color(piece));
             break;
         case Checkmate:
-            init_game();
+            handle_endgame(Checkmate);
             break;
         case Remis:
-            init_game();
+            handle_endgame(Remis);
             break;
         }
         
@@ -247,6 +296,7 @@ void replay()
         }
         joypad_state = joypad();
     }
+    num_moves = current_move;
     replay_mode = false;
 }
 
@@ -257,11 +307,11 @@ void handle_button_select()
     {
         if (joypad_state & J_A)
         {
-            init_game();
+            handle_endgame(Remis);
         }
         else if (joypad_state & J_B)
         {
-            init_game();
+            handle_endgame(Checkmate);
         }
         else if (joypad_state & J_START)
         {
