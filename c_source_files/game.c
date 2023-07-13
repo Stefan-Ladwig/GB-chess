@@ -5,6 +5,7 @@
 #include "chessboard.h"
 #include "graphics.h"
 #include "timer.h"
+#include "enums.h"
 
 const uint8_t DPAD_PRESSED = J_LEFT | J_RIGHT | J_UP | J_DOWN;
 
@@ -184,6 +185,7 @@ void replay();
 void handle_endgame(uint8_t event)
 {
     HIDE_SPRITES;
+    pause_timer();
     uint8_t *tile_buffer = malloc(16 * 3);
     show_endgame_screen(event, player, tile_buffer);
     waitpadup();
