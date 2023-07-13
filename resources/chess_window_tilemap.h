@@ -22,6 +22,6 @@
 #define chess_window_tilemapHeight 15
 #define chess_window_tilemapBank 0
 
-extern unsigned char chess_window_tilemap[];
+extern const unsigned char chess_window_tilemap[];
 
 /* End of CHESS_WINDOW_TILEMAP.H */
