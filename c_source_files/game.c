@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "chessboard.h"
 #include "graphics.h"
+#include "timer.h"
 
 const uint8_t DPAD_PRESSED = J_LEFT | J_RIGHT | J_UP | J_DOWN;
 
@@ -50,6 +51,7 @@ void init_game()
     init_board();
     init_graphics();
     init_cursor();
+    init_timer();
     if (!replay_mode) init_list_of_moves();
 
     joypad_state = 0;
@@ -171,6 +173,7 @@ void handle_button_a()
     }
     else if (square_selected && move_is_legal(cursor.y, cursor.x, selection.y, selection.x, false))
     {
+        if (num_moves == 0) start_timer();
         if (!replay_mode) save_move();
 
         event = move_piece_board(cursor.y, cursor.x, selection.y, selection.x, false);
