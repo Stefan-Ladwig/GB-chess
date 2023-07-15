@@ -267,8 +267,18 @@ void handle_button_a()
             return;
         }
         
-        cursor.x = selection.x;
-        cursor.y = selection.y;
+        if (num_moves == 1)
+        {
+            cursor.x = 3;
+            cursor.y = 1;
+        }
+        else
+        {
+            cursor.x = list_of_moves[num_moves - 2][2];
+            cursor.y = list_of_moves[num_moves - 2][3];
+        }
+        move_cursor_sprites(cursor.x, cursor.y);
+
         square_selected = false;
         hide_selection();
         player_switched();
