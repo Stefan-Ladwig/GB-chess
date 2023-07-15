@@ -25,10 +25,8 @@ struct pos {
 } cursor, selection;
 
 
-void title_screen()
+void await_input()
 {
-    show_logo();
-
     waitpadup();
     joypad_state = joypad();
 
@@ -36,6 +34,13 @@ void title_screen()
     {
         joypad_state = joypad();
     }
+}
+
+
+void title_screen()
+{
+    show_logo();
+    await_input();
 }
 
 
@@ -214,13 +219,8 @@ void handle_endgame(uint8_t event)
     pause_timer();
     uint8_t *tile_buffer = malloc(16 * 3);
     show_endgame_screen(event, player, tile_buffer);
-    waitpadup();
-    joypad_state = joypad();
-
-    while (!joypad_state)
-    {
-        joypad_state = joypad();
-    }
+    
+    await_input();
     
     hide_endgame_screen(event, player, tile_buffer);
     free(tile_buffer);
@@ -399,13 +399,7 @@ void handle_clock_menu()
 
     while (1)
     {
-        waitpadup();
-        joypad_state = joypad();
-
-        while (!joypad_state)
-        {
-            joypad_state = joypad();
-        }
+        await_input();
 
         if (option_selected)
         {
@@ -460,16 +454,10 @@ void handle_start()
 
     show_start();
     move_menu_arrow(menu_item);
-    waitpadup();
 
     while (1)
     {
-        joypad_state = joypad();
-
-        while (!joypad_state)
-        {
-            joypad_state = joypad();
-        }
+        await_input();
 
         if ((menu_item == 0) && (joypad_state & J_A))
             break;

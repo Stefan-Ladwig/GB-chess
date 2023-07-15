@@ -5,6 +5,8 @@
 
 extern bool player;
 
+void await_input();
+
 void title_screen();
 
 void init_game();
