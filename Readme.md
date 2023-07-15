@@ -4,7 +4,7 @@
 
 Chess piece Pixel Art was created by BerryArray, downloaded [here](https://berryarray.itch.io/chess-pieces-16x16-one-bit)
 
-### current status:
+### done:
 - rom compiles -> [last compiled rom](/compiled_roms) (not tested on original hardware! Use at own risk!)
 - game playable -> regular moves working
 - all special rules/moves implemented:
@@ -14,9 +14,10 @@ Chess piece Pixel Art was created by BerryArray, downloaded [here](https://berry
 - end game screen
 - menu to adjust chess clock
 - at start of turn, move cursor to last moved piece
-
-### left to implement:
 - title screen
+
+### to do:
+- writing a short Manual in Markdown
 - calculating and displaying material advantage
 
 ### maybe with a lot of enthusiasm:
