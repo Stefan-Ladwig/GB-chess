@@ -5,16 +5,16 @@
 Chess piece Pixel Art was created by BerryArray, downloaded [here](https://berryarray.itch.io/chess-pieces-16x16-one-bit)
 
 ### current status:
-- rom compiles -> [last compiled rom](/compiled_roms) (not tested on original hardware! Use at own risk)
+- rom compiles -> [last compiled rom](/compiled_roms) (not tested on original hardware! Use at own risk!)
 - game playable -> regular moves working
 - all special rules/moves implemented:
     first Pawn move, Castling, Promotion, En passaint, Draw and Checkmate, moves leaving King under attack not possible
 - replay mode
 - chess clock
 - end game screen
+- title screen
 
 ### left to implement:
-- title screen
 - menu to adjust chess clock
 - at start of turn, move cursor to last moved piece
 - calculating and displaying material advantage
