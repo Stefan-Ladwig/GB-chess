@@ -71,6 +71,9 @@ void init_timer()
 
     time[0] = time_start;
     time[1] = time_start;
+
+    set_bkg_tile_xy(18, 5, 138);
+    set_bkg_tile_xy(18, 12, 138);
     
     update_timer(0, time[0]);
     update_timer(1, time[1]);
