@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+void show_logo();
+
 void init_graphics();
 
 void move_selection_sprites(uint8_t x, uint8_t y);
@@ -31,5 +33,23 @@ void hide_endgame_screen(uint8_t ending_event, bool player, uint8_t *buffer);
 void show_promotion_screen(bool player, uint8_t *buffer);
 
 void hide_promotion_screen(bool player, uint8_t *buffer);
+
+void show_menu();
+
+void hide_menu();
+
+void show_start();
+
+void hide_start();
+
+void hide_timer();
+
+void update_timer_settings(uint16_t time, uint8_t bonus);
+
+void clear_digit_arrow(uint8_t menu_item);
+
+void move_digit_arrow(uint8_t time_digit, uint8_t menu_item);
+
+void move_menu_arrow(uint8_t menu_item);
 
 #endif

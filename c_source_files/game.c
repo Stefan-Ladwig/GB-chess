@@ -25,6 +25,25 @@ struct pos {
 } cursor, selection;
 
 
+void await_input()
+{
+    waitpadup();
+    joypad_state = joypad();
+
+    while (!joypad_state)
+    {
+        joypad_state = joypad();
+    }
+}
+
+
+void title_screen()
+{
+    show_logo();
+    await_input();
+}
+
+
 void init_cursor()
 {
     selection.x = 0;
@@ -49,11 +68,23 @@ void init_list_of_moves()
 }
 
 
+void handle_clock_menu();
+void handle_start();
+
+
 void init_game()
 {
+    pause_timer();
+
     init_board();
     init_graphics();
+    HIDE_SPRITES;
+
+    if (!replay_mode) handle_start();
+
+    SHOW_SPRITES;
     init_cursor();
+    hide_selection();
     init_timer();
     if (!replay_mode) init_list_of_moves();
 
@@ -188,13 +219,8 @@ void handle_endgame(uint8_t event)
     pause_timer();
     uint8_t *tile_buffer = malloc(16 * 3);
     show_endgame_screen(event, player, tile_buffer);
-    waitpadup();
-    joypad_state = joypad();
-
-    while (!joypad_state)
-    {
-        joypad_state = joypad();
-    }
+    
+    await_input();
     
     hide_endgame_screen(event, player, tile_buffer);
     free(tile_buffer);
@@ -249,16 +275,27 @@ void handle_button_a()
             break;
         case Checkmate:
             handle_endgame(Checkmate);
-            break;
+            return;
         case Remis:
             handle_endgame(Remis);
-            break;
+            return;
         }
         
-        cursor.x = selection.x;
-        cursor.y = selection.y;
+        if (num_moves == 1)
+        {
+            cursor.x = 3;
+            cursor.y = 1;
+        }
+        else
+        {
+            cursor.x = list_of_moves[num_moves - 2][2];
+            cursor.y = list_of_moves[num_moves - 2][3];
+        }
+        move_cursor_sprites(cursor.x, cursor.y);
+
         square_selected = false;
         hide_selection();
+        player_switched();
         player = !player;
     }
     else
@@ -313,13 +350,13 @@ void handle_button_select()
         }
         else if (joypad_state & J_B)
         {
+            player = !player;
             handle_endgame(Checkmate);
         }
         else if (joypad_state & J_START)
         {
             replay();
         }
-        
 
         joypad_state = joypad();
     }
@@ -346,4 +383,99 @@ void handle_input()
         handle_button_select();
     }
     waitpadup();
+}
+
+
+void handle_clock_menu()
+{
+    uint8_t menu_item = 0;
+    bool option_selected = 0;
+    int8_t time_digit = 0;
+    int8_t direction = 0;
+
+    show_menu();
+    update_timer_settings(get_time_start(), get_bonus());
+    move_menu_arrow(menu_item);
+
+    while (1)
+    {
+        await_input();
+
+        if (option_selected)
+        {
+            if (joypad_state & J_B)
+            {
+                option_selected = false;
+                clear_digit_arrow(menu_item);
+                time_digit = 0;
+            }
+            else if ((joypad_state & J_LEFT) || (joypad_state & J_RIGHT))
+            {
+                if (joypad_state & J_LEFT)
+                    time_digit--;
+                else if (joypad_state & J_RIGHT)
+                    time_digit++;
+
+                time_digit = (time_digit + 4) % 4;
+                if (menu_item == 1) time_digit %= 2;
+                move_digit_arrow(time_digit, menu_item);
+            }
+            else if ((joypad_state & J_DOWN) || (joypad_state & J_UP))
+            {
+                direction = (joypad_state & J_UP) - 2 * (joypad_state & J_DOWN);
+                add_to_timer(direction, menu_item, time_digit);
+            }
+        }
+        else if (!option_selected)
+        {
+            if (joypad_state & J_B)
+                break;
+            
+            if (joypad_state & J_A)
+            {
+                option_selected = true;
+                move_digit_arrow(time_digit, menu_item);
+            }
+            else if ((joypad_state & J_DOWN) || (joypad_state & J_UP))
+            {
+                menu_item = (menu_item + 1 + 2) % 2;
+                move_menu_arrow(menu_item);
+            }
+        }
+        waitpadup();
+    }
+    waitpadup();
+}
+
+
+void handle_start()
+{
+    uint8_t menu_item = 0;
+
+    show_start();
+    move_menu_arrow(menu_item);
+
+    while (1)
+    {
+        await_input();
+
+        if ((menu_item == 0) && (joypad_state & J_A))
+            break;
+        
+        if ((menu_item == 1) && (joypad_state & J_A))
+        {
+            handle_clock_menu();
+            show_start();
+            menu_item = 0;
+            move_menu_arrow(menu_item);
+        }
+        else if ((joypad_state & J_DOWN) || (joypad_state & J_UP))
+        {
+            menu_item = (menu_item + 1 + 2) % 2;
+            move_menu_arrow(menu_item);
+        }
+        waitpadup();
+    }
+    waitpadup();
+    hide_start();
 }

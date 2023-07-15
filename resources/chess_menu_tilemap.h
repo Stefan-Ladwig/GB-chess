@@ -1,13 +1,13 @@
 /*
 
- CHESS_TILEMAP.H
+ CHESS_MENU_TILEMAP.H
 
  Map Include File.
 
  Info:
    Section       : 
    Bank          : 0
-   Map size      : 20 x 18
+   Map size      : 16 x 8
    Tile set      : Z:\home\stefan\Code\GB\Tiles\tile_design_data\chess_tiles.gbr
    Plane count   : 1 plane (8 bits)
    Plane order   : Tiles are continues
@@ -18,10 +18,10 @@
 
 */
 
-#define chess_tilemapWidth 20
-#define chess_tilemapHeight 18
-#define chess_tilemapBank 0
+#define chess_menu_tilemapWidth 16
+#define chess_menu_tilemapHeight 8
+#define chess_menu_tilemapBank 0
 
-extern const unsigned char chess_tilemap[];
+extern const unsigned char chess_menu_tilemap[];
 
-/* End of CHESS_TILEMAP.H */
+/* End of CHESS_MENU_TILEMAP.H */
