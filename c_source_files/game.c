@@ -65,6 +65,7 @@ void init_game()
 
     SHOW_SPRITES;
     init_cursor();
+    hide_selection();
     init_timer();
     if (!replay_mode) init_list_of_moves();
 
@@ -260,10 +261,10 @@ void handle_button_a()
             break;
         case Checkmate:
             handle_endgame(Checkmate);
-            break;
+            return;
         case Remis:
             handle_endgame(Remis);
-            break;
+            return;
         }
         
         cursor.x = selection.x;
@@ -325,6 +326,7 @@ void handle_button_select()
         }
         else if (joypad_state & J_B)
         {
+            player = !player;
             handle_endgame(Checkmate);
         }
         else if (joypad_state & J_START)
