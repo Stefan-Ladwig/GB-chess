@@ -199,6 +199,17 @@ void handle_promotion()
 
                 waitpadup();
             }
+            else if (joypad_state & J_B)
+            {
+                hide_promotion_screen(player, tile_buffer);
+
+                while (joypad_state & J_B)
+                {
+                    joypad_state = joypad();
+                }
+                
+                show_promotion_screen(player, tile_buffer);
+            }
             joypad_state = joypad();
         }
         hide_promotion_screen(player, tile_buffer);
