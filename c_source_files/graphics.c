@@ -7,6 +7,8 @@
 #include "../resources/chess_tiles.h"
 #include "../resources/chess_sprite_tiles.h"
 #include "../resources/chess_window_tilemap.h"
+#include "../resources/chess_menu_tilemap.h"
+#include "../resources/chess_start_tilemap.h"
 
 
 void init_background()
@@ -190,4 +192,84 @@ void update_timer(bool player, uint16_t time)
     set_bkg_tile_xy(18, 11 - player * 7, 128 + minutes % 10);
     set_bkg_tile_xy(18, 13 - player * 7, 128 + seconds / 10);
     set_bkg_tile_xy(18, 14 - player * 7, 128 + seconds % 10);
+}
+
+
+void hide_timer()
+{
+    fill_bkg_rect(18, 3, 1, 12, 99);
+}
+
+
+void update_timer_settings(uint16_t time, uint8_t bonus)
+{
+    uint8_t minutes = time / 60;
+    uint8_t seconds = time % 60;
+
+    set_bkg_tile_xy(10, 7, 100 + minutes / 10);
+    set_bkg_tile_xy(11, 7, 100 + minutes % 10);
+    set_bkg_tile_xy(13, 7, 100 + seconds / 10);
+    set_bkg_tile_xy(14, 7, 100 + seconds % 10);
+
+    seconds = bonus;
+
+    set_bkg_tile_xy(13, 10, 100 + seconds / 10);
+    set_bkg_tile_xy(14, 10, 100 + seconds % 10);
+}
+
+
+void show_menu()
+{
+    set_bkg_tiles(1, 5, 16, 8, chess_menu_tilemap);
+}
+
+
+void hide_menu()
+{
+    set_bkg_submap(1, 5, 16, 8, chess_tilemap, 20);
+}
+
+
+void show_start()
+{
+    set_bkg_tiles(1, 5, 16, 8, chess_start_tilemap);
+}
+
+
+void hide_start()
+{
+    set_bkg_submap(1, 5, 16, 8, chess_tilemap, 20);
+}
+
+
+uint8_t get_digit_arrow_y(uint8_t menu_item)
+{
+    return 8 + 3 * (menu_item == 1);
+}
+
+
+void clear_digit_arrow(uint8_t menu_item)
+{
+    uint8_t y = get_digit_arrow_y(menu_item);
+
+    fill_bkg_rect(10, y, 5, 1, 96);
+}
+
+
+void move_digit_arrow(uint8_t time_digit, uint8_t menu_item)
+{
+    uint8_t x = 13 + time_digit;
+    if (menu_item == 0)
+        x = x - 3 + (time_digit >= 2);
+    uint8_t y = get_digit_arrow_y(menu_item);
+
+    fill_bkg_rect(10, y, 5, 1, 96);
+    set_bkg_tile_xy(x, y, 112);
+}
+
+
+void move_menu_arrow(uint8_t menu_item)
+{
+    fill_bkg_rect(3, 6, 1, 6, 96);
+    set_bkg_tile_xy(3, 7 + 3 * (menu_item == 1), 111);
 }

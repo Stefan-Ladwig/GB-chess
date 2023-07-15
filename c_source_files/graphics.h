@@ -32,4 +32,22 @@ void show_promotion_screen(bool player, uint8_t *buffer);
 
 void hide_promotion_screen(bool player, uint8_t *buffer);
 
+void show_menu();
+
+void hide_menu();
+
+void show_start();
+
+void hide_start();
+
+void hide_timer();
+
+void update_timer_settings(uint16_t time, uint8_t bonus);
+
+void clear_digit_arrow(uint8_t menu_item);
+
+void move_digit_arrow(uint8_t time_digit, uint8_t menu_item);
+
+void move_menu_arrow(uint8_t menu_item);
+
 #endif

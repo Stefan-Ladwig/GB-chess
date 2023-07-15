@@ -49,10 +49,21 @@ void init_list_of_moves()
 }
 
 
+void handle_clock_menu();
+void handle_start();
+
+
 void init_game()
 {
+    pause_timer();
+
     init_board();
     init_graphics();
+    HIDE_SPRITES;
+
+    handle_start();
+
+    SHOW_SPRITES;
     init_cursor();
     init_timer();
     if (!replay_mode) init_list_of_moves();
@@ -259,6 +270,7 @@ void handle_button_a()
         cursor.y = selection.y;
         square_selected = false;
         hide_selection();
+        player_switched();
         player = !player;
     }
     else
@@ -319,7 +331,6 @@ void handle_button_select()
         {
             replay();
         }
-        
 
         joypad_state = joypad();
     }
@@ -346,4 +357,111 @@ void handle_input()
         handle_button_select();
     }
     waitpadup();
+}
+
+
+void handle_clock_menu()
+{
+    uint8_t menu_item = 0;
+    bool option_selected = 0;
+    int8_t time_digit = 0;
+    int8_t direction = 0;
+
+    show_menu();
+    update_timer_settings(get_time_start(), get_bonus());
+    move_menu_arrow(menu_item);
+
+    while (1)
+    {
+        waitpadup();
+        joypad_state = joypad();
+
+        while (!joypad_state)
+        {
+            joypad_state = joypad();
+        }
+
+        if (option_selected)
+        {
+            if (joypad_state & J_B)
+            {
+                option_selected = false;
+                clear_digit_arrow(menu_item);
+                time_digit = 0;
+            }
+            else if ((joypad_state & J_LEFT) || (joypad_state & J_RIGHT))
+            {
+                if (joypad_state & J_LEFT)
+                    time_digit--;
+                else if (joypad_state & J_RIGHT)
+                    time_digit++;
+
+                time_digit = (time_digit + 4) % 4;
+                if (menu_item == 1) time_digit %= 2;
+                move_digit_arrow(time_digit, menu_item);
+            }
+            else if ((joypad_state & J_DOWN) || (joypad_state & J_UP))
+            {
+                direction = (joypad_state & J_UP) - 2 * (joypad_state & J_DOWN);
+                add_to_timer(direction, menu_item, time_digit);
+            }
+        }
+        else if (!option_selected)
+        {
+            if (joypad_state & J_B)
+                break;
+            
+            if (joypad_state & J_A)
+            {
+                option_selected = true;
+                move_digit_arrow(time_digit, menu_item);
+            }
+            else if ((joypad_state & J_DOWN) || (joypad_state & J_UP))
+            {
+                menu_item = (menu_item + 1 + 2) % 2;
+                move_menu_arrow(menu_item);
+            }
+        }
+        waitpadup();
+    }
+    waitpadup();
+}
+
+
+void handle_start()
+{
+    uint8_t menu_item = 0;
+
+    show_start();
+    move_menu_arrow(menu_item);
+    waitpadup();
+
+    while (1)
+    {
+        joypad_state = joypad();
+
+        while (!joypad_state)
+        {
+            joypad_state = joypad();
+        }
+
+        if ((menu_item == 0) && (joypad_state & J_A))
+            break;
+        
+        if ((menu_item == 1) && (joypad_state & J_A))
+        {
+            handle_clock_menu();
+            show_start();
+            menu_item = 0;
+            move_menu_arrow(menu_item);
+        }
+        else if ((joypad_state & J_DOWN) || (joypad_state & J_UP))
+        {
+            menu_item = (menu_item + 1 + 2) % 2;
+            move_menu_arrow(menu_item);
+        }
+        waitpadup();
+    }
+    waitpadup();
+    hide_start();
 }
