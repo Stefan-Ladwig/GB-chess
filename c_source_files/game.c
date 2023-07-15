@@ -25,6 +25,20 @@ struct pos {
 } cursor, selection;
 
 
+void title_screen()
+{
+    show_logo();
+
+    waitpadup();
+    joypad_state = joypad();
+
+    while (!joypad_state)
+    {
+        joypad_state = joypad();
+    }
+}
+
+
 void init_cursor()
 {
     selection.x = 0;

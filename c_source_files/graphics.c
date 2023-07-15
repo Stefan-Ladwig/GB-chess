@@ -9,6 +9,17 @@
 #include "../resources/chess_window_tilemap.h"
 #include "../resources/chess_menu_tilemap.h"
 #include "../resources/chess_start_tilemap.h"
+#include "../resources/chess_logo_tiles.h"
+#include "../resources/chess_logo_tilemap.h"
+
+
+void show_logo()
+{
+    set_bkg_1bpp_data(176, 55, chess_logo_tiles);
+    fill_bkg_rect(0, 0, 20, 18, 176);
+    set_bkg_tiles(7, 3, 6, 13, chess_logo_tilemap);
+    SHOW_BKG;
+}
 
 
 void init_background()

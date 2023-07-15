@@ -3,6 +3,8 @@
 
 void main(void)
 {
+    title_screen();
+
     init_game();
 
     while (1)
