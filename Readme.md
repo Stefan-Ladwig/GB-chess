@@ -17,6 +17,7 @@ Chess piece Pixel Art was created by BerryArray, downloaded [here](https://berry
 - title screen
 
 ### to do:
+- add labels for rank and file
 - add indicator whose turn it is
 - add indicator for replay mode
 - calculate and display material advantage
