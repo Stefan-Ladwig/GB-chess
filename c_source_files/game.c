@@ -207,7 +207,7 @@ void handle_promotion()
                 {
                     joypad_state = joypad();
                 }
-                
+
                 show_promotion_screen(player, tile_buffer);
             }
             joypad_state = joypad();
@@ -292,16 +292,8 @@ void handle_button_a()
             return;
         }
         
-        if (num_moves == 1)
-        {
-            cursor.x = 3;
-            cursor.y = 1;
-        }
-        else
-        {
-            cursor.x = list_of_moves[num_moves - 2][2];
-            cursor.y = list_of_moves[num_moves - 2][3];
-        }
+        cursor.x = selection.x;
+        cursor.y = selection.y;
         move_cursor_sprites(cursor.x, cursor.y);
 
         square_selected = false;
