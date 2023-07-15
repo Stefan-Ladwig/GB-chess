@@ -61,7 +61,7 @@ void init_game()
     init_graphics();
     HIDE_SPRITES;
 
-    handle_start();
+    if (!replay_mode) handle_start();
 
     SHOW_SPRITES;
     init_cursor();
