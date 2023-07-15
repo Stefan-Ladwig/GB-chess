@@ -17,8 +17,11 @@ Chess piece Pixel Art was created by BerryArray, downloaded [here](https://berry
 - title screen
 
 ### to do:
-- writing a short Manual in Markdown
-- calculating and displaying material advantage
+- add indicator whose turn it is
+- add indicator for replay mode
+- calculate and display material advantage
+- write a short Manual in Markdown
+- optimize code (especially checking for mate)
 
 ### maybe with a lot of enthusiasm:
  - rudimentary chess bot to play against
