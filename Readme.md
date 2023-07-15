@@ -12,11 +12,11 @@ Chess piece Pixel Art was created by BerryArray, downloaded [here](https://berry
 - replay mode
 - chess clock
 - end game screen
-- title screen
-
-### left to implement:
 - menu to adjust chess clock
 - at start of turn, move cursor to last moved piece
+
+### left to implement:
+- title screen
 - calculating and displaying material advantage
 
 ### maybe with a lot of enthusiasm:
