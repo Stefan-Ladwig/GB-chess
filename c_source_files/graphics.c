@@ -348,3 +348,29 @@ void hide_replay_label()
 {
     fill_bkg_rect(3, 0, 12, 1, 99);
 }
+
+
+void update_material_label(int8_t material_value)
+{
+    fill_bkg_rect(17,  1, 3, 1, 99);
+    fill_bkg_rect(17, 16, 3, 1, 99);
+
+    if (material_value == 0)
+        return;
+
+    uint8_t y_show = 1 + 15 * (material_value < 0);
+
+    set_bkg_tile_xy(17, y_show, 197);
+
+    material_value = abs(material_value);
+
+    if (material_value >= 10)
+    {
+        set_bkg_tile_xy(18, y_show, 198 + material_value / 10);
+        set_bkg_tile_xy(19, y_show, 198 + material_value % 10);
+    }
+    else
+    {
+        set_bkg_tile_xy(18, y_show, 198 + material_value);
+    }
+}

@@ -11,6 +11,8 @@ void set_piece(uint8_t x, uint8_t y, uint8_t piece);
 
 bool get_color(uint8_t colored_piece);
 
+uint8_t get_piece_value(uint8_t piece);
+
 bool piece_on_square(uint8_t x, uint8_t y);
 
 uint8_t move_piece_board(const uint8_t origin_x, const uint8_t origin_y,

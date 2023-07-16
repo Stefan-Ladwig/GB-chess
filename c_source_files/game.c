@@ -18,6 +18,7 @@ uint8_t **list_of_moves;
 uint16_t num_moves;
 uint8_t *tile_buffer = (uint8_t*) NULL;
 uint8_t pawn_promotion[2][8] = {{no_Piece}};
+int8_t material_value;
 
 struct pos {
     uint8_t x;
@@ -93,6 +94,7 @@ void init_game()
     square_selected = false;
     player = false;
     event = no_Event;
+    material_value = 0;
 }
 
 
@@ -250,6 +252,19 @@ void handle_endgame(uint8_t event)
 }
 
 
+void update_material_value(uint8_t piece)
+{
+    bool color = get_color(piece);
+    uint8_t colorless_piece = piece - 6 * color;
+    uint8_t piece_value = get_piece_value(colorless_piece);
+
+    if (color == white)
+        material_value += piece_value;
+    else
+        material_value -= piece_value;
+}
+
+
 void handle_button_a()
 {
     if (!square_selected && piece_on_square(cursor.y, cursor.x) &&
@@ -264,6 +279,8 @@ void handle_button_a()
     {
         if (num_moves == 0) start_timer();
         if (!replay_mode) save_move();
+
+        update_material_value(get_piece(selection.y, selection.x));
 
         event = move_piece_board(cursor.y, cursor.x, selection.y, selection.x, false);
 
@@ -280,9 +297,12 @@ void handle_button_a()
             break;
         case Promotion:;
             handle_promotion();
+            update_material_value(piece);
+            update_material_value(get_piece(selection.y, selection.x) + 6 * (1 - 2 * player));
             break;
         case En_passaint:;
             set_piece(selection.y + 1 - 2 * get_color(piece), selection.x, no_Piece);
+            update_material_value(Pawn + 6 * !player);
             draw_blank_square(selection.x, selection.y + 1 - 2 * get_color(piece));
             break;
         case Checkmate:
@@ -301,6 +321,7 @@ void handle_button_a()
         hide_selection();
         player_switched();
         flip_player_indicator();
+        update_material_label(material_value);
 
         player = !player;
     }

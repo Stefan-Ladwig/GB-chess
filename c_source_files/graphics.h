@@ -62,4 +62,6 @@ void show_replay_label();
 
 void hide_replay_label();
 
+void update_material_label(int8_t material_value);
+
 #endif
