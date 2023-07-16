@@ -403,6 +403,8 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
         {
             if (castle_pieces_moved[color][i]) continue;
 
+            if (get_piece(row_king, (i / 2) * 7) != Rook + 6 * color) continue;
+
             bool squares_not_empty = false;
             for (uint8_t j = 1 + 2 * i; j < 3 + 2 * i + 1 - i / 2; j++)
             {
