@@ -13,6 +13,7 @@
 #include "../resources/chess_logo_tilemap.h"
 #include "../resources/chess_filelabel_tilemap.h"
 #include "../resources/chess_ranklabel_tilemap.h"
+#include "../resources/chess_replay_label_tilemap.h"
 
 
 void show_logo()
@@ -334,4 +335,16 @@ void hide_labels()
 void flip_player_indicator()
 {
     set_sprite_prop(16,get_sprite_prop(16) ^ 0b01000000);
+}
+
+
+void show_replay_label()
+{
+    set_bkg_tiles(3, 0, 12, 1, chess_replay_label_tilemap);
+}
+
+
+void hide_replay_label()
+{
+    fill_bkg_rect(3, 0, 12, 1, 99);
 }

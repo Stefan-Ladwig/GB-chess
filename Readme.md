@@ -11,13 +11,12 @@
 - chess clock
 - end game screen
 - menu to adjust chess clock
-- at start of turn, move cursor to last moved piece
 - title screen
-- add labels for rank and file
-- add indicator whose turn it is
+- labels for rank and file
+- indicator whose turn it is
+- indicator for replay mode
 
 ### to do:
-- add indicator for replay mode
 - calculate and display material advantage
 - write a short Manual in Markdown
 - optimize code (especially checking for mate)

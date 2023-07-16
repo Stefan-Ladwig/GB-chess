@@ -58,4 +58,8 @@ void hide_labels();
 
 void flip_player_indicator();
 
+void show_replay_label();
+
+void hide_replay_label();
+
 #endif

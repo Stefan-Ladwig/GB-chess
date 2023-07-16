@@ -316,6 +316,7 @@ void replay()
 {
     replay_mode = true;
     init_game();
+    show_replay_label();
 
     uint16_t current_move = 0;
 
@@ -324,7 +325,7 @@ void replay()
         if (current_move >= num_moves)
         {
             replay_mode = false;
-            return;
+            break;
         }
         if (joypad_state & J_RIGHT)
         {
@@ -343,6 +344,7 @@ void replay()
     }
     num_moves = current_move;
     replay_mode = false;
+    hide_replay_label();
 }
 
 
