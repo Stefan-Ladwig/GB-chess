@@ -111,6 +111,28 @@ bool pawn_moved(uint8_t row, bool color)
 }
 
 
+uint8_t get_piece_value(uint8_t piece)
+{
+    piece = piece - 6 * get_color(piece);
+    
+    switch (piece)
+    {
+    case Pawn:
+        return 1;
+    case Bishop:
+        return 3;
+    case Knight:
+        return 3;
+    case Rook:
+        return 5;
+    case Queen:
+        return 11;
+    }
+    
+    return 0;
+}
+
+
 bool pawn_jumped(const uint8_t origin_x,
                  const uint8_t destination_x, const uint8_t destination_y)
 {
@@ -402,6 +424,8 @@ void get_destinations_for_piece(uint8_t piece, uint8_t row, uint8_t col,
         for (uint8_t i = 0; i < 3; i+=2)
         {
             if (castle_pieces_moved[color][i]) continue;
+
+            if (get_piece(row_king, (i / 2) * 7) != Rook + 6 * color) continue;
 
             bool squares_not_empty = false;
             for (uint8_t j = 1 + 2 * i; j < 3 + 2 * i + 1 - i / 2; j++)

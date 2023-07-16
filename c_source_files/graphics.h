@@ -52,4 +52,16 @@ void move_digit_arrow(uint8_t time_digit, uint8_t menu_item);
 
 void move_menu_arrow(uint8_t menu_item);
 
+void show_labels();
+
+void hide_labels();
+
+void flip_player_indicator();
+
+void show_replay_label();
+
+void hide_replay_label();
+
+void update_material_label(int8_t material_value);
+
 #endif

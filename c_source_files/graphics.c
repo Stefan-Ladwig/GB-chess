@@ -11,6 +11,9 @@
 #include "../resources/chess_start_tilemap.h"
 #include "../resources/chess_logo_tiles.h"
 #include "../resources/chess_logo_tilemap.h"
+#include "../resources/chess_filelabel_tilemap.h"
+#include "../resources/chess_ranklabel_tilemap.h"
+#include "../resources/chess_replay_label_tilemap.h"
 
 
 void show_logo()
@@ -24,7 +27,7 @@ void show_logo()
 
 void init_background()
 {
-    set_bkg_data(0, 167, chess_tiles);
+    set_bkg_data(0, 208, chess_tiles);
     set_bkg_tiles(0, 0, 20, 18, chess_tilemap);
     SHOW_BKG;
 }
@@ -34,7 +37,7 @@ void init_sprites()
 {
     SPRITES_8x8;
     
-    set_sprite_data(0, 4, chess_sprite_tiles);
+    set_sprite_data(0, 5, chess_sprite_tiles);
 
     for (uint8_t i = 0; i < 8; i++)
     {
@@ -45,6 +48,9 @@ void init_sprites()
     {
         set_sprite_tile(j + 8, j / 2);
     }
+
+    set_sprite_tile(16, 4);
+
     SHOW_SPRITES;
 }
 
@@ -56,6 +62,8 @@ void init_graphics()
 
     init_background();
     init_sprites();
+    move_sprite(16, 152, 83);
+    set_sprite_prop(16, 0);
 
     HIDE_WIN;
 
@@ -283,4 +291,86 @@ void move_menu_arrow(uint8_t menu_item)
 {
     fill_bkg_rect(3, 6, 1, 6, 96);
     set_bkg_tile_xy(3, 7 + 3 * (menu_item == 1), 111);
+}
+
+
+void show_rank_labels()
+{
+    set_bkg_tiles(0, 1, 1, 16, chess_ranklabel_tilemap);
+}
+
+
+void show_file_labels()
+{
+    set_bkg_tiles(1, 17, 16, 1, chess_filelabel_tilemap);
+}
+
+
+void show_labels()
+{
+    show_rank_labels();
+    show_file_labels();
+}
+
+
+void hide_rank_labels()
+{
+    fill_bkg_rect(0, 1, 1, 16, 99);
+}
+
+
+void hide_file_labels()
+{
+    fill_bkg_rect(1, 17, 16, 1, 99);
+}
+
+
+void hide_labels()
+{
+    hide_rank_labels();
+    hide_file_labels();
+}
+
+
+void flip_player_indicator()
+{
+    set_sprite_prop(16,get_sprite_prop(16) ^ 0b01000000);
+}
+
+
+void show_replay_label()
+{
+    set_bkg_tiles(3, 0, 12, 1, chess_replay_label_tilemap);
+}
+
+
+void hide_replay_label()
+{
+    fill_bkg_rect(3, 0, 12, 1, 99);
+}
+
+
+void update_material_label(int8_t material_value)
+{
+    fill_bkg_rect(17,  1, 3, 1, 99);
+    fill_bkg_rect(17, 16, 3, 1, 99);
+
+    if (material_value == 0)
+        return;
+
+    uint8_t y_show = 1 + 15 * (material_value < 0);
+
+    set_bkg_tile_xy(17, y_show, 197);
+
+    material_value = abs(material_value);
+
+    if (material_value >= 10)
+    {
+        set_bkg_tile_xy(18, y_show, 198 + material_value / 10);
+        set_bkg_tile_xy(19, y_show, 198 + material_value % 10);
+    }
+    else
+    {
+        set_bkg_tile_xy(18, y_show, 198 + material_value);
+    }
 }

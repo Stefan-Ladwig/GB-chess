@@ -3,4 +3,4 @@
 
 extern const unsigned char chess_logo_tilemap[];
 
-#endif CHESS_LOGO_TILEMAP_H
+#endif

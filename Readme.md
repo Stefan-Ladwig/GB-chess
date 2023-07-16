@@ -2,8 +2,6 @@
 
 ![example_pic](images/example_pic.png)
 
-Chess piece Pixel Art was created by BerryArray, downloaded [here](https://berryarray.itch.io/chess-pieces-16x16-one-bit)
-
 ### done:
 - rom compiles -> [last compiled rom](/compiled_roms) (not tested on original hardware! Use at own risk!)
 - game playable -> regular moves working
@@ -13,13 +11,13 @@ Chess piece Pixel Art was created by BerryArray, downloaded [here](https://berry
 - chess clock
 - end game screen
 - menu to adjust chess clock
-- at start of turn, move cursor to last moved piece
 - title screen
+- labels for rank and file
+- indicator whose turn it is
+- indicator for replay mode
+- calculate and display material advantage
 
 ### to do:
-- add indicator whose turn it is
-- add indicator for replay mode
-- calculate and display material advantage
 - write a short Manual in Markdown
 - optimize code (especially checking for mate)
 
@@ -28,3 +26,11 @@ Chess piece Pixel Art was created by BerryArray, downloaded [here](https://berry
  - playable through link cable
 
  Also a lot of playtesting to find bugs should be done!
+<br>
+<br>
+ ## Attributions
+- dev kit [GBDK-2020](https://github.com/gbdk-2020/gbdk-2020/) used to develop the game in C
+- tools by H. Mulder: [TileDesigner](http://www.devrs.com/gb/hmgd/gbtd.html) and [TileMapBuilder](http://www.devrs.com/gb/hmgd/gbmb.html)
+- Chess pieces (ingame) Pixel Art created by BerryArray ([ChessPieces](https://berryarray.itch.io/chess-pieces-16x16-one-bit))
+- the logo for the title screen was put together with artwork from [vecteezy](https://www.vecteezy.com/) ([Pawn](https://www.vecteezy.com/vector-art/10954466-chess-pawn-icon-vector)) and [favpng](https://favpng.com/) ([Crown](https://favpng.com/png_view/chess-chess-piece-queen-pawn-clip-art-png/ktL4W54B))
+- fonts used: rank and file labels from MelPurpleCrystal ([font](https://fontmeme.com/schriftarten/mobitec-6x6-schriftart/)), everything else from [Daniel Hepper](https://github.com/dhepper) ([font](https://github.com/dhepper/font8x8/blob/master/font8x8_basic.h))
