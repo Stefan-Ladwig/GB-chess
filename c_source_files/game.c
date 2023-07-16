@@ -83,6 +83,7 @@ void init_game()
     if (!replay_mode) handle_start();
 
     SHOW_SPRITES;
+    show_labels();
     init_cursor();
     hide_selection();
     init_timer();

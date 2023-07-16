@@ -11,6 +11,8 @@
 #include "../resources/chess_start_tilemap.h"
 #include "../resources/chess_logo_tiles.h"
 #include "../resources/chess_logo_tilemap.h"
+#include "../resources/chess_filelabel_tilemap.h"
+#include "../resources/chess_ranklabel_tilemap.h"
 
 
 void show_logo()
@@ -24,7 +26,7 @@ void show_logo()
 
 void init_background()
 {
-    set_bkg_data(0, 167, chess_tiles);
+    set_bkg_data(0, 186, chess_tiles);
     set_bkg_tiles(0, 0, 20, 18, chess_tilemap);
     SHOW_BKG;
 }
@@ -283,4 +285,42 @@ void move_menu_arrow(uint8_t menu_item)
 {
     fill_bkg_rect(3, 6, 1, 6, 96);
     set_bkg_tile_xy(3, 7 + 3 * (menu_item == 1), 111);
+}
+
+
+void show_rank_labels()
+{
+    set_bkg_tiles(0, 1, 1, 16, chess_ranklabel_tilemap);
+}
+
+
+void show_file_labels()
+{
+    set_bkg_tiles(1, 17, 16, 1, chess_filelabel_tilemap);
+}
+
+
+void show_labels()
+{
+    show_rank_labels();
+    show_file_labels();
+}
+
+
+void hide_rank_labels()
+{
+    fill_bkg_rect(0, 1, 1, 16, 99);
+}
+
+
+void hide_file_labels()
+{
+    fill_bkg_rect(1, 17, 16, 1, 99);
+}
+
+
+void hide_labels()
+{
+    hide_rank_labels();
+    hide_file_labels();
 }

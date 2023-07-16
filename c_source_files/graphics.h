@@ -52,4 +52,8 @@ void move_digit_arrow(uint8_t time_digit, uint8_t menu_item);
 
 void move_menu_arrow(uint8_t menu_item);
 
+void show_labels();
+
+void hide_labels();
+
 #endif
