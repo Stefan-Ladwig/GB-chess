@@ -407,6 +407,11 @@ void handle_input()
     {
         handle_button_a();
     }
+    else if ((joypad_state & J_B) && square_selected)
+    {
+        square_selected = false;
+        hide_selection();
+    }
     else if (joypad_state & J_SELECT)
     {
         handle_button_select();
