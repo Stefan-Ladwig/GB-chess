@@ -15,9 +15,9 @@
 - labels for rank and file
 - indicator whose turn it is
 - indicator for replay mode
+- calculate and display material advantage
 
 ### to do:
-- calculate and display material advantage
 - write a short Manual in Markdown
 - optimize code (especially checking for mate)
 
