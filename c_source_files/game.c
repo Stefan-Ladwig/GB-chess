@@ -300,6 +300,8 @@ void handle_button_a()
         square_selected = false;
         hide_selection();
         player_switched();
+        flip_player_indicator();
+
         player = !player;
     }
     else

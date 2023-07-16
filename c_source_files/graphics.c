@@ -26,7 +26,7 @@ void show_logo()
 
 void init_background()
 {
-    set_bkg_data(0, 186, chess_tiles);
+    set_bkg_data(0, 208, chess_tiles);
     set_bkg_tiles(0, 0, 20, 18, chess_tilemap);
     SHOW_BKG;
 }
@@ -36,7 +36,7 @@ void init_sprites()
 {
     SPRITES_8x8;
     
-    set_sprite_data(0, 4, chess_sprite_tiles);
+    set_sprite_data(0, 5, chess_sprite_tiles);
 
     for (uint8_t i = 0; i < 8; i++)
     {
@@ -47,6 +47,9 @@ void init_sprites()
     {
         set_sprite_tile(j + 8, j / 2);
     }
+
+    set_sprite_tile(16, 4);
+
     SHOW_SPRITES;
 }
 
@@ -58,6 +61,8 @@ void init_graphics()
 
     init_background();
     init_sprites();
+    move_sprite(16, 152, 83);
+    set_sprite_prop(16, 0);
 
     HIDE_WIN;
 
@@ -323,4 +328,10 @@ void hide_labels()
 {
     hide_rank_labels();
     hide_file_labels();
+}
+
+
+void flip_player_indicator()
+{
+    set_sprite_prop(16,get_sprite_prop(16) ^ 0b01000000);
 }

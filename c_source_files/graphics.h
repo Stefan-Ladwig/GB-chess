@@ -56,4 +56,6 @@ void show_labels();
 
 void hide_labels();
 
+void flip_player_indicator();
+
 #endif

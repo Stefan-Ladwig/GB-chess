@@ -13,10 +13,10 @@
 - menu to adjust chess clock
 - at start of turn, move cursor to last moved piece
 - title screen
-
-### to do:
 - add labels for rank and file
 - add indicator whose turn it is
+
+### to do:
 - add indicator for replay mode
 - calculate and display material advantage
 - write a short Manual in Markdown
