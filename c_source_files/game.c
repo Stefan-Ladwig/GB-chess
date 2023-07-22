@@ -87,9 +87,11 @@ void init_game()
     show_labels();
     init_cursor();
     hide_selection();
-    init_timer();
-    if (!replay_mode) init_list_of_moves();
-
+    if (!replay_mode)
+    {
+        init_timer();
+        init_list_of_moves();
+    }
     joypad_state = 0;
     square_selected = false;
     player = false;
@@ -205,12 +207,14 @@ void handle_promotion()
             else if (joypad_state & J_B)
             {
                 hide_promotion_screen(player, tile_buffer);
+                HIDE_SPRITES;
 
                 while (joypad_state & J_B)
                 {
                     joypad_state = joypad();
                 }
 
+                SHOW_SPRITES;
                 show_promotion_screen(player, tile_buffer);
             }
             joypad_state = joypad();
@@ -319,7 +323,7 @@ void handle_button_a()
 
         square_selected = false;
         hide_selection();
-        player_switched();
+        if (!replay_mode) player_switched();
         flip_player_indicator();
         update_material_label(material_value);
 
@@ -338,6 +342,7 @@ void replay()
     replay_mode = true;
     init_game();
     show_replay_label();
+    hide_timer();
 
     uint16_t current_move = 0;
 
