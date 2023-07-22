@@ -1,5 +1,7 @@
 # GB - Chess | Manual
 
+![logo](../images/logo.png)
+
 ## Start / Menu
 
 Use the up and down arrow to navigate between menu options, press A to select and B to deselect or go back to last menu.
@@ -26,3 +28,9 @@ When a player wants to resign, on his turn he has to hold SELECT and press B. Wh
 
 While playing a game or at the endgame screen, you can hold SELECT and press START to start the replay mode of the current game. The game starts at the beginning and you can step to the next move with pressing the right arrow. If you wish to procede playing the game from a certain position press B and you are back to regular playing mode.
 Note that in the replay mode and when continuing to play from a certain position, the timer is disabled.
+
+### labels / indicators
+
+On the left and the bottom of the screen are the rank and file labels.
+On the right is the chess clock (when the time is not 0) shown vertically.
+In between is the player indicator, pointing down, when its whites turn and pointing up, when its blacks turn. Below or above the chess clock is the piece advantage counter. showing how far the player with piece advantage is ahead.
