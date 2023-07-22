@@ -16,9 +16,9 @@
 - indicator whose turn it is
 - indicator for replay mode
 - calculate and display material advantage
+- short Manual in Markdown
 
 ### to do:
-- write a short Manual in Markdown
 - optimize code (especially checking for mate)
 
 ### maybe with a lot of enthusiasm:
